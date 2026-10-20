@@ -4,6 +4,7 @@
 tap "nubjs/tap"
 
 # Shell
+brew "btop"
 brew "fzf"
 brew "starship"
 brew "vivid"
@@ -16,7 +17,6 @@ brew "eza"
 brew "fd"
 brew "ripgrep"
 brew "tldr"
-brew "tree"
 
 # Git
 brew "gh"
@@ -26,18 +26,19 @@ brew "lazygit"
 
 # Dev tools
 brew "direnv"
-brew "jq"
+brew "hyperfine"
 brew "lazydocker"
 brew "mise"
-brew "mkcert"
 brew "neovim"
 brew "nubjs/tap/nub", trusted: true
+brew "tokei"
 brew "usage"
+brew "xh"
+brew "yq"
 
 # Network & security
 brew "gnupg"
-brew "mtr"
-brew "nmap"
+brew "pinentry-mac"
 
 # Editors & terminal
 cask "ghostty"
@@ -47,22 +48,16 @@ cask "zed"
 # AI
 cask "claude-code"
 cask "codex"
-cask "t3-code"
 
 # Dev apps
 cask "beekeeper-studio"
-cask "burp-suite"
 cask "orbstack"
-cask "yaak"
 
 # Git clients
-cask "fork"
-cask "github"
 cask "tower"
 
 # Browsers
 cask "brave-browser"
-cask "google-chrome"
 
 # Communication & notes
 cask "legcord"
@@ -72,7 +67,6 @@ cask "obsidian"
 # Files & sharing
 cask "blip"
 cask "dropbox"
-cask "localsend"
 cask "qbittorrent"
 
 # Media & documents
@@ -86,5 +80,4 @@ cask "tunnelblick"
 
 # Fonts
 cask "font-inter"
-cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
