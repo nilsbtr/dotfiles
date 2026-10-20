@@ -31,13 +31,14 @@ setopt EXTENDED_GLOB INTERACTIVE_COMMENTS NO_BEEP NO_FLOW_CONTROL
 setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
 setopt COMPLETE_IN_WORD ALWAYS_TO_END
 
+WORDCHARS='*?_-[]~&;!#$%^(){}<>'   # Ctrl-W stops at / . = (path-friendly)
+
+# History
 HISTFILE=$XDG_STATE_HOME/zsh/history
 HISTSIZE=100000
 SAVEHIST=100000
 setopt EXTENDED_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_VERIFY   # leading space = not saved
-
-WORDCHARS='*?_-[]~&;!#$%^(){}<>'   # Ctrl-W stops at / . = (path-friendly)
 
 # ─── PATH ────────────────────────────────────────────────────────────────────
 typeset -U path fpath   # keep entries unique
@@ -53,23 +54,26 @@ for _p in /opt/homebrew /home/linuxbrew/.linuxbrew /usr/local; do
 done
 unset _p
 
+# Global installs of package managers
 export GOPATH=${GOPATH:-$HOME/go}
 export BUN_INSTALL=$HOME/.bun
 export PNPM_HOME=$HOME/.pnpm
 
 path=(
-  $HOME/.local/bin        # mise, uv, starship installers + uv tool installs
-  $PNPM_HOME
-  $BUN_INSTALL/bin
-  $GOPATH/bin             # go install …
-  $HOME/.cargo/bin(N-/)
+  $HOME/.local/bin        # uv tool install, standalone installers
+  $PNPM_HOME              # pnpm add -g
+  $BUN_INSTALL/bin        # bun add -g
+  $GOPATH/bin             # go install
+  $HOME/.cargo/bin(N-/)   # cargo install
   $path
 )
 
-# App-installed CLIs (skipped if the app isn't installed)
+# App-installed CLIs, appended (skipped if not installed)
+export ANDROID_HOME=$HOME/Library/Android/sdk
 path+=(
   "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"(N-/)  # idea, studio, …
-  $HOME/.orbstack/bin(N-/)   # orb, orbctl, kubectl; docker also lives in /usr/local/bin
+  $HOME/.orbstack/bin(N-/)                                            # orb, docker, kubectl
+  $ANDROID_HOME/{emulator,platform-tools}(N-/)                        # emulator, adb
 )
 
 # ─── Environment ─────────────────────────────────────────────────────────────
@@ -81,13 +85,18 @@ export CLICOLOR=1
 
 # Keep REPL / pager history out of $HOME (dirs created above)
 export LESSHISTFILE=$XDG_STATE_HOME/less/history
-export PYTHON_HISTORY=$XDG_STATE_HOME/python/history       # Python ≥ 3.13
+export PYTHON_HISTORY=$XDG_STATE_HOME/python/history   # Python ≥ 3.13
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node/repl_history
 
+# No telemetry / nagging
 export DO_NOT_TRACK=1 NEXT_TELEMETRY_DISABLED=1
 export HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_ENV_HINTS=1
+
+# Python
 export PIP_REQUIRE_VIRTUALENV=true   # never pip-install into a global Python by accident
 export VIRTUAL_ENV_DISABLE_PROMPT=1  # the prompt shows the venv itself
+
+# Tool config
 export BAT_THEME=OneHalfDark
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 
@@ -99,26 +108,23 @@ if (( $+commands[vivid] )); then
   unset _lsc
 fi
 
-# mise: also honour .nvmrc / .node-version / .python-version / .go-version / .java-version / .sdkmanrc
-# (mise ignores these by default). mise sets JAVA_HOME itself — don't export it here.
+# ─── mise (per-project Node / Python / Go / Java versions) ───────────────────
+# Also read .nvmrc / .node-version / .python-version / .go-version / .java-version.
+# mise sets JAVA_HOME itself — don't export it here.
 export MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS=node,python,go,java
 
-# Android SDK
-export ANDROID_HOME=$HOME/Library/Android/sdk
-[[ -d $ANDROID_HOME ]] && path+=($ANDROID_HOME/emulator $ANDROID_HOME/platform-tools)
-
-# mise: per-project Node / Python / Go / Java versions (mise.toml, .tool-versions, .nvmrc …)
-# Activated before completions so mise-managed tools (uv, pnpm, just, …) are on PATH there.
-# (not cached: its output embeds the current PATH)
+# Before completions so mise-managed tools (uv, pnpm, …) are found there.
+# Not cached: its output embeds the current PATH.
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+# ─── Helpers ─────────────────────────────────────────────────────────────────
+autoload -Uz add-zsh-hook
 
 # Debian/Ubuntu ship fd/bat under other names
 _fd=${commands[fd]:+fd};   [[ -z $_fd && -n ${commands[fdfind]} ]] && _fd=fdfind
 _bat=${commands[bat]:+bat}; [[ -z $_bat && -n ${commands[batcat]} ]] && _bat=batcat
 
-# ─── Helpers: cache generated init scripts & completions ─────────────────────
-# `tool init zsh` output is cached and only regenerated when the tool changes,
-# which saves a process spawn per tool on every new shell.
+# Cache `tool init zsh` output; regenerated only when the tool's binary changes
 _cached_init() {   # _cached_init <name> <cmd> [args…]
   local name=$1 bin=${commands[$2]}
   shift
@@ -131,6 +137,7 @@ _cached_init() {   # _cached_init <name> <cmd> [args…]
   source $f
 }
 
+# Generate a completion file once; regenerated when the tool's binary is newer
 _gen_comp() {      # _gen_comp <name> <cmd> [args…]  →  completions/_<name>
   local out=$ZSH_CACHE/completions/_$1 bin=${commands[$2]}
   shift
@@ -140,7 +147,7 @@ _gen_comp() {      # _gen_comp <name> <cmd> [args…]  →  completions/_<name>
   _comp_changed=1
 }
 
-# ─── Plugins (git clone on first run, byte-compiled) ─────────────────────────
+# ─── Plugins: install (git clone on first run, byte-compiled) ────────────────
 _plug_compile() { local f; for f in $1/**/*.zsh(N.); do zcompile -R -- $f 2>/dev/null; done }
 _plug() {
   local dir=$ZSH_PLUGINS/${1:t}
@@ -157,21 +164,21 @@ _plug zdharma-continuum/fast-syntax-highlighting
 _plug MichaelAquilina/zsh-you-should-use
 
 # ─── Completion ──────────────────────────────────────────────────────────────
+_gen_comp docker docker completion zsh
+_gen_comp just   just --completions zsh
+_gen_comp mise   mise completion zsh          # needs `usage`
+_gen_comp pnpm   pnpm completion zsh
+_gen_comp ruff   ruff generate-shell-completion zsh
 _gen_comp uv     uv generate-shell-completion zsh
 _gen_comp uvx    uvx --generate-shell-completion zsh
-_gen_comp mise   mise completion zsh          # needs `usage` (brew install usage)
-_gen_comp docker docker completion zsh
-_gen_comp pnpm   pnpm completion zsh
-_gen_comp just   just --completions zsh
-_gen_comp ruff   ruff generate-shell-completion zsh
 
-fpath=($ZSH_CACHE/completions $ZSH_PLUGINS/zsh-completions/src $BUN_INSTALL(N-/) $fpath)
+fpath=($ZSH_CACHE/completions $ZSH_PLUGINS/zsh-completions/src $fpath)
 
+# Full security check at most once a day; otherwise load the dump directly.
+# touch: compinit only rewrites the dump when fpath changes, so its mtime would go stale.
 autoload -Uz compinit
 _zcd=$ZSH_CACHE/zcompdump-$ZSH_VERSION
 [[ -n $_comp_changed ]] && rm -f $_zcd
-# Full security check at most once a day; otherwise load the dump directly.
-# touch: compinit only rewrites the dump when fpath changes, so its mtime would go stale.
 if [[ ! -s $_zcd || -n $_zcd(#qN.mh+20) ]]; then
   compinit -i -d $_zcd && touch $_zcd
 else
@@ -181,7 +188,7 @@ fi
 
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path $ZSH_CACHE/compcache
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'   # case-insensitive, fuzzy
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' squeeze-slashes true
@@ -190,6 +197,7 @@ zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,comm -w'
 
+# fzf-tab: < / > switch groups, previews for dirs, git files and processes
 zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:complete:(cd|z|__zoxide_z):*' fzf-preview \
   'eza -1 --color=always --icons=always $realpath 2>/dev/null || ls -1 $realpath'
@@ -213,17 +221,17 @@ bindkey '^[[1;5C' forward-word                 # Ctrl-→ / Ctrl-←
 bindkey '^[[1;5D' backward-word
 bindkey '^[[1;3C' forward-word                 # Alt-→ / Alt-← (macos-option-as-alt)
 bindkey '^[[1;3D' backward-word
-bindkey '^[[H' beginning-of-line
+bindkey '^[[H' beginning-of-line               # Home / End / Delete
 bindkey '^[[F' end-of-line
 bindkey '^[[3~' delete-char
 bindkey '^X^E' edit-command-line               # open command in $EDITOR
 bindkey '^ ' autosuggest-accept                # Ctrl-Space accepts suggestion
 
-
-# ─── Plugins: load order matters ─────────────────────────────────────────────
+# ─── Plugins: load (order matters) ───────────────────────────────────────────
 # compinit → fzf-tab → fzf (so `**<Tab>` falls back to fzf-tab) → autosuggest → highlighting
 [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.plugin.zsh ]] && source $ZSH_PLUGINS/fzf-tab/fzf-tab.plugin.zsh
 
+# fzf: Ctrl-T files, Alt-C dirs, Ctrl-R history
 if (( $+commands[fzf] )); then
   if [[ -n $_fd ]]; then
     export FZF_DEFAULT_COMMAND="$_fd --type f --hidden --follow --exclude .git"
@@ -249,11 +257,9 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # don't re-wrap every widget before each promp
 [[ -f $ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] &&
   source $ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 [[ -f $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh ]] &&
-  source $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh
+  source $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh   # reminds you of existing aliases
 
 # ─── Tools ───────────────────────────────────────────────────────────────────
-autoload -Uz add-zsh-hook
-
 _cached_init zoxide zoxide init zsh        # z <dir>, zi = interactive
 _cached_init direnv direnv hook zsh        # only if installed
 
@@ -276,6 +282,7 @@ add-zsh-hook chpwd _auto_venv
 _auto_venv
 
 # ─── Prompt ──────────────────────────────────────────────────────────────────
+# Starship, or a minimal built-in fallback: dir, git branch, ❯ (red on error)
 if (( $+commands[starship] )); then
   _cached_init starship starship init zsh --print-full-init
 else
@@ -287,6 +294,7 @@ else
 fi
 
 # ─── Aliases ─────────────────────────────────────────────────────────────────
+# General
 alias ...='cd ../..' ....='cd ../../..'
 alias -- -='cd -'
 alias reload='exec zsh'
@@ -295,6 +303,7 @@ alias mkdir='mkdir -p'
 alias grep='grep --color=auto'
 [[ $OSTYPE == darwin* ]] && alias o='open' || alias o='xdg-open'
 
+# Modern replacements (only if installed)
 if (( $+commands[eza] )); then
   alias ls='eza --group-directories-first --icons=auto'
   alias ll='eza -lh --git --group-directories-first --icons=auto'
@@ -305,7 +314,7 @@ else
   alias ll='ls -lh' la='ls -lAh'
 fi
 
-if [[ -n $_bat ]]; then
+if [[ -n $_bat ]]; then   # bat as cat and man pager
   [[ $_bat == batcat ]] && alias bat=batcat
   alias cat="$_bat --paging=never --style=plain"
   export MANPAGER="sh -c 'col -bx | $_bat -l man -p'" MANROFFOPT='-c'
@@ -348,10 +357,21 @@ alias gob='go build'
 alias got='go test ./...'
 alias gomt='go mod tidy'
 
-# VS Code
+# Editor
 (( $+commands[code] )) && alias vsc='code .'
 
 # ─── Functions ───────────────────────────────────────────────────────────────
+# General
+mkcd() { mkdir -p -- "$1" && cd -- "$1" }
+
+# Git: switch branch with fzf (local + remote, most recent first)
+gbf() {
+  local b
+  b=$(git branch --all --sort=-committerdate --format='%(refname:short)' |
+      grep -v HEAD | fzf --prompt='branch> ' --preview 'git log --oneline --color=always -20 {}') &&
+    git switch ${b#origin/}
+}
+
 # Node: detect the project's package manager from its lockfile
 pm() {
   local dir=$PWD
@@ -365,7 +385,8 @@ pm() {
   done
   print npm
 }
-# ni / nr / nx — skipped if you already use @antfu/ni (same names)
+
+# Node: ni / nr / nx = install / run / exec with the detected manager (skipped if @antfu/ni is installed)
 (( $+commands[ni] )) || ni() { $(pm) install "$@" }
 (( $+commands[nr] )) || nr() { $(pm) run "$@" }
 (( $+commands[nx] )) || nx() {
@@ -377,7 +398,7 @@ pm() {
 }
 alias nrd='nr dev' nrb='nr build' nrt='nr test' nrl='nr lint'
 
-# Pick a package.json script with fzf and run it
+# Node: pick a package.json script with fzf and run it
 nrf() {
   [[ -f package.json ]] || { print 'no package.json here'; return 1 }
   local s
@@ -385,7 +406,7 @@ nrf() {
       fzf --prompt='script> ') && nr $s
 }
 
-# Delete every node_modules under the current dir (asks first)
+# Node: delete every node_modules under the current dir (asks first)
 nuke-nm() {
   local -a dirs=(${(f)"$(find . -name node_modules -type d -prune 2>/dev/null)"})
   (( $#dirs )) || { print 'no node_modules found'; return }
@@ -401,39 +422,28 @@ venv() {
   source .venv/bin/activate && _AUTO_VENV=$VIRTUAL_ENV
 }
 
-# Ports: list listeners (optionally on one port) / kill whatever holds a port
+# Network: list listeners (optionally on one port) / kill the listener on a port / serve cwd
 port()     { lsof -nP -iTCP${1:+:$1} -sTCP:LISTEN }
 killport() {
   local -a pids=(${(f)"$(lsof -ti tcp:${1:?usage: killport <port>} -sTCP:LISTEN 2>/dev/null)"})
   (( $#pids )) || { print "nothing on :$1"; return 1 }
   kill $pids && print "killed $pids on :$1"
 }
+serve()    { python3 -m http.server ${1:-8000} }
 
-mkcd()  { mkdir -p -- "$1" && cd -- "$1" }
-
-serve() { python3 -m http.server ${1:-8000} }
-
-# Switch git branch with fzf (local + remote, most recent first)
-gbf() {
-  local b
-  b=$(git branch --all --sort=-committerdate --format='%(refname:short)' |
-      grep -v HEAD | fzf --prompt='branch> ' --preview 'git log --oneline --color=always -20 {}') &&
-    git switch ${b#origin/}
-}
-
-# Update plugins, clear caches, restart shell
+# Shell: update plugins, clear caches, restart
 zsh-update() {
   local d
   for d in $ZSH_PLUGINS/*(N/); do
     print -P "%F{cyan}↻%f ${d:t}"
     git -C $d pull --quiet --ff-only && _plug_compile $d
   done
-  local -a junk=($ZSH_CACHE/init-*(N) $ZSH_CACHE/completions/_*(N) $ZSH_CACHE/zcompdump*(N))
+  local -a junk=($ZSH_CACHE/init-*(N) $ZSH_CACHE/ls-colors(N) $ZSH_CACHE/completions/_*(N) $ZSH_CACHE/zcompdump*(N))
   (( $#junk )) && rm -f -- $junk
   exec zsh
 }
 
-# Startup time, 10 runs
+# Shell: startup time, 10 runs
 zsh-bench() {
   local TIMEFMT='%*E s' i
   for i in {1..10}; do time zsh -i -c exit; done
