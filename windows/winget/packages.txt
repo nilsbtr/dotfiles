@@ -1,0 +1,24 @@
+# Install (pwsh, from the repo root):
+#   (Get-Content windows\winget\packages.txt) -match '^[^#]' | ForEach-Object { winget install --id $_ -e }
+
+# Shell & terminal
+Microsoft.PowerShell
+Microsoft.WindowsTerminal
+
+# Git & security
+Git.Git
+GnuPG.GnuPG
+
+# Editors & IDEs
+Google.AndroidStudio
+JetBrains.Toolbox
+Microsoft.VisualStudioCode
+SublimeHQ.SublimeText.4
+ZedIndustries.Zed
+
+# Containers
+Docker.DockerDesktop
+Microsoft.WSL
+
+# Utilities
+Microsoft.PowerToys

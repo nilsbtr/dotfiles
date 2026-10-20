@@ -18,9 +18,10 @@ use the top-level copies.
 
 ## Packages
 
+`scoop/apps.txt` (CLI tools, toolchains, fonts) and `winget/packages.txt` (apps) are kept by hand,
+dev tools only. The install commands are at the top of each file.
+
 ```powershell
-scoop import windows\scoop\scoopfile.json
-winget import -i windows\winget\packages.json
 Get-Content vscode\extensions.txt | ForEach-Object { code --install-extension $_ }
 Install-Module PSFzf, CompletionPredictor, git-completion -Scope CurrentUser
 ```

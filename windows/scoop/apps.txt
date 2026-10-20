@@ -1,0 +1,50 @@
+# Install (pwsh, from the repo root):
+#   scoop bucket add extras; scoop bucket add java; scoop bucket add nerd-fonts
+#   scoop install ((Get-Content windows\scoop\apps.txt) -match '^[^#]')
+
+# Shell
+fzf
+starship
+vivid
+zoxide
+
+# Files & search
+bat
+dust
+eza
+fd
+microsoft-coreutils
+ripgrep
+tealdeer
+
+# Git
+delta
+gh
+extras/lazygit
+
+# Dev tools
+btop
+hyperfine
+jq
+just
+just-lsp
+lazydocker
+scoop-search
+tokei
+xh
+yq
+
+# Languages & toolchains
+android-clt
+bun
+extras/flutter
+go
+java/temurin25-jdk
+nodejs-lts
+pnpm
+python
+ruff
+uv
+
+# Fonts
+nerd-fonts/JetBrains-Mono
