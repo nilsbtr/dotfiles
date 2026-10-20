@@ -114,8 +114,8 @@
     "editor.hideCursorInOverviewRuler": false,
 
     // ----- Editor font, rulers, and cursor -----
-    "editor.fontFamily": "'GeistMono Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
-    // on Windows: "editor.fontFamily": "'GeistMono Nerd Font Mono', 'Consolas', 'Courier New', monospace",
+    "editor.fontFamily": "'JetBrainsMonoNL Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+    // on Windows: "editor.fontFamily": "'JetBrainsMonoNL Nerd Font Mono', 'Consolas', 'Courier New', monospace",
     "editor.fontLigatures": false,
     "editor.fontSize": 14,
     "editor.rulers": [
@@ -155,9 +155,10 @@
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.tabs.enabled": true,
     "terminal.integrated.tabs.hideCondition": "singleTerminal",
-    "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
-    // on Windows: "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Consolas', 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "'JetBrainsMonoNL Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+    // on Windows: "terminal.integrated.fontFamily": "'JetBrainsMonoNL Nerd Font Mono', 'Consolas', 'Courier New', monospace",
     "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontLigatures.enabled": false,
     "terminal.integrated.macOptionIsMeta": true,   // Option = Alt for zsh/fzf key bindings
 
     // ----- Shared tooling, linting, schemas, and extensions -----

@@ -97,15 +97,17 @@ export PIP_REQUIRE_VIRTUALENV=true   # never pip-install into a global Python by
 export VIRTUAL_ENV_DISABLE_PROMPT=1  # the prompt shows the venv itself
 
 # Tool config
-export BAT_THEME=OneHalfDark
+export BAT_THEME=ansi   # uses the terminal's (Vesper) palette; also picked up by delta
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 
 # LS_COLORS for eza + completion menus (macOS has none); cached, $(<file) doesn't fork
+# Theme: Vesper palette from ~/.config/vivid/themes, else vivid's built-in ansi
 if (( $+commands[vivid] )); then
-  _lsc=$ZSH_CACHE/ls-colors
-  [[ -s $_lsc && $_lsc -nt $commands[vivid] ]] || vivid generate one-dark >| $_lsc
+  _lsc=$ZSH_CACHE/ls-colors _lst=$XDG_CONFIG_HOME/vivid/themes/vesper.yml
+  [[ -f $_lst ]] || _lst=ansi
+  [[ -s $_lsc && $_lsc -nt $commands[vivid] && ! $_lst -nt $_lsc ]] || vivid generate $_lst >| $_lsc
   export LS_COLORS=$(<$_lsc)
-  unset _lsc
+  unset _lsc _lst
 fi
 
 # ----- mise (per-project Node / Python / Go / Java versions) -----
@@ -233,7 +235,11 @@ if (( $+commands[fzf] )); then
     export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
     export FZF_ALT_C_COMMAND="$_fd --type d --hidden --follow --exclude .git"
   fi
-  export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border=rounded --info=inline --cycle'
+  # Colors: terminal palette (Vesper) by index, plus a subtle selection background
+  _fzf_colors='--color=16,bg+:#232323,fg+:15,hl:11,hl+:11,prompt:4,pointer:11,marker:10,spinner:11,info:8,header:8,border:8,gutter:-1'
+  export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border=rounded --info=inline --cycle $_fzf_colors"
+  zstyle ':fzf-tab:*' fzf-flags $_fzf_colors
+  unset _fzf_colors
   export FZF_CTRL_T_OPTS="--preview '${_bat:-cat} --color=always --style=numbers --line-range=:300 {} 2>/dev/null || cat {}'"
   export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {} 2>/dev/null || ls {}'"
   # fzf >= 0.48 has `fzf --zsh`; fall back to distro-shipped scripts on older versions
@@ -249,6 +255,12 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # don't re-wrap every widget before each prompt
 [[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
   source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+# fast-syntax-highlighting uses the terminal palette, except: comments are fg=black
+# (invisible, Vesper's black is its background), variables a 256-color lime
+typeset -gA FAST_HIGHLIGHT_STYLES
+FAST_HIGHLIGHT_STYLES[comment]='fg=8'
+FAST_HIGHLIGHT_STYLES[variable]='fg=blue'
+FAST_HIGHLIGHT_STYLES[paired-bracket]='fg=black,bg=blue'
 [[ -f $ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] &&
   source $ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 [[ -f $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh ]] &&

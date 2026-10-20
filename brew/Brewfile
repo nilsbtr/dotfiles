@@ -85,7 +85,6 @@ cask "surfshark"
 cask "tunnelblick"
 
 # Fonts
-cask "font-geist-mono-nerd-font"
 cask "font-inter"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"

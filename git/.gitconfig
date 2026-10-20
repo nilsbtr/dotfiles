@@ -41,6 +41,11 @@
 [delta]
 	navigate = true
 	dark = true
+	syntax-theme = ansi
+	minus-style = syntax "#2b1c1a"
+	minus-emph-style = syntax "#4d2e29"
+	plus-style = syntax "#19251e"
+	plus-emph-style = syntax "#2a4133"
 
 [merge]
 	conflictStyle = zdiff3

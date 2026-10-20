@@ -1,0 +1,9 @@
+# lazygit's default theme uses the terminal palette (Vesper). Only overridden where
+# Vesper's colors don't work: its blue is too light as a selection background.
+gui:
+  theme:
+    activeBorderColor:
+      - "#ffc799"
+      - bold
+    selectedLineBgColor:
+      - "#232323"

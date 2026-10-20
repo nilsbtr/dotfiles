@@ -1,0 +1,102 @@
+# Vesper for vivid (LS_COLORS for eza and zsh completion menus)
+# Colors are Ghostty's Vesper palette, so `ls` matches the terminal and prompt.
+
+colors:
+  black: '101010'
+  orange: 'ffc799'
+  peach: 'e6b99d'
+  salmon: 'f5a191'
+  coral: 'ff8080'
+  sage: '90b99f'
+  mint: '99ffe4'
+  lavender: 'aca1cf'
+  pink: 'e29eca'
+  rose: 'ea83a5'
+  gray: 'a0a0a0'
+  dim: '7e7e7e'
+
+core:
+  normal_text: {}
+  regular_file: {}
+  reset_to_normal: {}
+  multi_hard_link: {}
+  directory:
+    foreground: orange
+  symlink:
+    foreground: mint
+    font-style: italic
+  executable_file:
+    foreground: sage
+    font-style: bold
+  broken_symlink:
+    foreground: black
+    background: coral
+  missing_symlink_target:
+    foreground: black
+    background: coral
+  fifo:
+    foreground: black
+    background: lavender
+  socket:
+    foreground: black
+    background: pink
+  door:
+    foreground: black
+    background: pink
+  block_device:
+    foreground: peach
+  character_device:
+    foreground: peach
+  setuid:
+    foreground: black
+    background: salmon
+  setgid:
+    foreground: black
+    background: salmon
+  file_with_capability:
+    foreground: black
+    background: salmon
+  sticky:
+    foreground: black
+    background: lavender
+  other_writable:
+    foreground: black
+    background: orange
+  sticky_other_writable:
+    foreground: black
+    background: orange
+
+text:
+  foreground: gray
+  special:
+    foreground: peach
+    font-style: [bold, underline]
+  configuration:
+    foreground: peach
+  licenses:
+    foreground: dim
+
+markup:
+  foreground: pink
+
+programming:
+  foreground: lavender
+  tooling:
+    foreground: sage
+
+executable:
+  foreground: sage
+  font-style: bold
+
+media:
+  foreground: rose
+
+office:
+  foreground: salmon
+
+archives:
+  foreground: coral
+  font-style: underline
+
+unimportant:
+  foreground: dim
