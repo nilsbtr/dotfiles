@@ -115,12 +115,12 @@
                 "background": "#101010FF",
                 "iconStyle": "default",
                 "showCloseButton": "always",
-                "unfocusedBackground": "#1C1C1CFF"
+                "unfocusedBackground": "#161616FF"
             },
             "tabRow":
             {
-                "background": "#282828FF",
-                "unfocusedBackground": "#282828FF"
+                "background": "#232323FF",
+                "unfocusedBackground": "#232323FF"
             },
             "window": 
             {
