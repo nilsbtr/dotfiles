@@ -10,8 +10,8 @@ use the top-level copies.
 | `windows-terminal/settings.json` | `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\` |
 | `git/.gitconfig` | `~\.gitconfig` (fill in name, email, signingkey) |
 | `starship/starship.toml` | `~\.config\starship.toml` |
-| `vscode/settings.json` | `%APPDATA%\Code\User\` |
-| `zed/settings.json` | `%APPDATA%\Zed\` |
+| `../vscode/settings.json` | `%APPDATA%\Code\User\` |
+| `../zed/settings.json` | `%APPDATA%\Zed\` |
 | `../git/ignore` | `~\.config\git\ignore` |
 | `../vivid/themes/vesper.yml` | `~\.config\vivid\themes\` |
 | `../lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\` |
@@ -21,6 +21,6 @@ use the top-level copies.
 ```powershell
 scoop import windows\scoop\scoopfile.json
 winget import -i windows\winget\packages.json
-Get-Content windows\vscode\extensions.txt | ForEach-Object { code --install-extension $_ }
+Get-Content vscode\extensions.txt | ForEach-Object { code --install-extension $_ }
 Install-Module PSFzf, CompletionPredictor, git-completion -Scope CurrentUser
 ```
