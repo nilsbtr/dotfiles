@@ -2,6 +2,7 @@
 node = "lts"
 pnpm = "latest"
 bun = "latest"
+nub = "latest"
 python = "latest"
 uv = "latest"
 ruff = "latest"

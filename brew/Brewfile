@@ -1,8 +1,5 @@
 # Install: brew bundle --file=brew/Brewfile
 
-# Taps
-tap "nubjs/tap"
-
 # Shell
 brew "btop"
 brew "fzf"
@@ -29,8 +26,6 @@ brew "direnv"
 brew "hyperfine"
 brew "lazydocker"
 brew "mise"
-brew "neovim"
-brew "nubjs/tap/nub", trusted: true
 brew "tokei"
 brew "usage"
 brew "xh"
