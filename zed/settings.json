@@ -111,7 +111,7 @@
     "button": true,
     "default_height": 320,
     "working_directory": "current_project_directory",
-    "font_family": "JetBrainsMonoNL Nerd Font Mono",
+    "font_family": "JetBrainsMonoNL Nerd Font",
     "font_size": 13,
     "font_weight": 400,
     "font_features": {
