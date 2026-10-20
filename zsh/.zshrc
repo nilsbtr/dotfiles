@@ -5,7 +5,7 @@
 #   Linux : apt install zsh fzf fd-find ripgrep bat zoxide eza vivid
 #           + curl -sS https://starship.rs/install.sh | sh
 #           + curl https://mise.run | sh
-#   Then  : mise install   (node, pnpm, bun, python, uv, go, java … from ~/.config/mise/config.toml)
+#   Then  : mise install
 #
 # Plugins self-install on first launch (needs git). Update everything: zsh-update
 # Machine-specific settings / secrets → ~/.zshrc.local (sourced last, never committed)
