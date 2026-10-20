@@ -8,6 +8,7 @@
 #   Then  : mise install
 #
 # Plugins self-install on first launch (needs git). Update everything: zsh-update
+# Overview of the aliases and functions below: zhelp [filter]
 # Machine-specific settings / secrets: ~/.zshrc.local (sourced last, never committed)
 # PATH for non-interactive shells (scripts, `zsh -c`): ~/.zshenv
 # Measure startup: zsh-bench      Profile startup: ZPROF=1 zsh -i -c exit
@@ -310,7 +311,7 @@ alias mkdir='mkdir -p'
 alias grep='grep --color=auto'
 [[ $OSTYPE == darwin* ]] && alias o='open' || alias o='xdg-open'
 
-# Modern replacements (only if installed)
+# Listing (eza if installed)
 if (( $+commands[eza] )); then
   alias ls='eza --group-directories-first --icons=auto'
   alias ll='eza -lh --git --group-directories-first --icons=auto'
@@ -321,6 +322,7 @@ else
   alias ll='ls -lh' la='ls -lAh'
 fi
 
+# Modern replacements (only if installed)
 if [[ -n $_bat ]]; then   # bat as cat and man pager
   [[ $_bat == batcat ]] && alias bat=batcat
   alias cat="$_bat --paging=never --style=plain"
@@ -328,7 +330,6 @@ if [[ -n $_bat ]]; then   # bat as cat and man pager
 fi
 [[ -n $_fd && $_fd == fdfind ]] && alias fd=fdfind
 (( $+commands[rg] )) && alias rg='rg --smart-case'
-(( $+commands[lazygit] )) && alias lg=lazygit
 
 # Git
 alias g=git
@@ -348,6 +349,7 @@ alias gl='git pull --rebase'
 alias gst='git stash'
 alias gstp='git stash pop'
 alias glog='git log --oneline --graph --decorate -20'
+(( $+commands[lazygit] )) && alias lg=lazygit
 
 # Docker
 alias d=docker
@@ -369,7 +371,7 @@ alias gomt='go mod tidy'
 (( $+commands[code] )) && alias vsc='code .'
 
 # ----- Functions -----
-# General
+# General: make a directory and cd into it
 mkcd() { mkdir -p -- "$1" && cd -- "$1" }
 
 # Git: switch branch with fzf (local + remote, most recent first)
@@ -395,9 +397,9 @@ pm() {
 }
 
 # Node: ni / nr / nx = install / run / exec with the detected manager (skipped if @antfu/ni is installed)
-(( $+commands[ni] )) || ni() { $(pm) install "$@" }
-(( $+commands[nr] )) || nr() { $(pm) run "$@" }
-(( $+commands[nx] )) || nx() {
+(( $+commands[ni] )) || ni() { $(pm) install "$@" }  # install dependencies
+(( $+commands[nr] )) || nr() { $(pm) run "$@" }  # run a package.json script
+(( $+commands[nx] )) || nx() {  # run a package binary (npx, pnpm dlx, bunx)
   case $(pm) in
     pnpm) pnpm dlx "$@" ;;
     bun)  bunx "$@" ;;
@@ -431,13 +433,13 @@ venv() {
 }
 
 # Network: list listeners (optionally on one port) / kill the listener on a port / serve cwd
-port()     { lsof -nP -iTCP${1:+:$1} -sTCP:LISTEN }
-killport() {
+port()     { lsof -nP -iTCP${1:+:$1} -sTCP:LISTEN }  # list listening ports (port [n])
+killport() {  # kill whatever listens on a port
   local -a pids=(${(f)"$(lsof -ti tcp:${1:?usage: killport <port>} -sTCP:LISTEN 2>/dev/null)"})
   (( $#pids )) || { print "nothing on :$1"; return 1 }
   kill $pids && print "killed $pids on :$1"
 }
-serve()    { python3 -m http.server ${1:-8000} }
+serve()    { python3 -m http.server ${1:-8000} }  # serve the current dir (serve [port])
 
 # Shell: update plugins, clear caches, restart
 zsh-update() {
@@ -455,6 +457,83 @@ zsh-update() {
 zsh-bench() {
   local TIMEFMT='%*E s' i
   for i in {1..10}; do time zsh -i -c exit; done
+}
+
+# Shell: list the aliases, functions and keys in this file (zhelp [filter])
+zhelp() {
+  # Categories come from the "# Category" / "# Category: description" comments
+  # in the alias and function sections; a trailing "  # ..." describes one function.
+  # Aliases that only add options to an existing command (grep, ls -> eza) are skipped.
+  emulate -LR zsh -o extended_glob
+  local line cat= desc= name text w row on=0 width=0 pat=$1
+  local -a cats words entries
+  local -A rows seen
+  for line in "${(@f)$(<${ZDOTDIR:-$HOME}/.zshrc)}"; do
+    case $line in
+      '# ----- Aliases -----') on=1; continue ;;
+      '# ----- Local overrides'*) break ;;
+      '# -----'*) continue ;;
+    esac
+    (( on )) || continue
+    if [[ $line == '# '* ]]; then
+      cat=${${${line#\# }%%:*}%% \(*} desc=${${(M)line:#*: *}#*: }
+      (( $cats[(Ie)$cat] )) || cats+=$cat
+    elif [[ $line =~ '^(\(\(.*\)\) \|\| )?([a-z][a-z0-9_-]*)\(\) *\{' ]]; then
+      name=$match[2] text=$desc
+      [[ $line == *'  # '* ]] && text=${line##*  \# }
+      (( $+functions[$name] && ! $+seen[$name] )) && seen[$name]=1 rows[$cat]+=$name$'\t'f$'\t'$text$'\n'
+    elif [[ $line == *alias\ * ]]; then
+      words=(${(z)${line#*alias }})
+      for w in $words; do
+        [[ $w == [^=]##=* ]] || continue
+        name=${w%%=*}
+        (( $+aliases[$name] && ! $+seen[$name] && ! $+commands[$name] )) || continue
+        [[ ${aliases[$name]%% *} == $name ]] && continue
+        seen[$name]=1 rows[$cat]+=$name$'\t'a$'\t'$aliases[$name]$'\n'
+      done
+    fi
+  done
+
+  # Keys come from the key bindings, fzf and zoxide setup, so they're listed by hand
+  local -a keys=(
+    Ctrl-R          'search history (fzf)'
+    Ctrl-T          'insert a file path (fzf)'
+    Alt-C           'cd into a subdirectory (fzf)'
+    Tab             'completion menu (fzf-tab), < and > switch groups'
+    Up/Down         "search history by what's typed"
+    Alt-←/→         'move by word'
+    Ctrl-Space      'accept the grey suggestion'
+    'Ctrl-X Ctrl-E' 'edit the command in your editor'
+    'z / zi'        'jump to a frequent directory / pick one (zoxide)'
+  )
+  cats+=Keys
+  for name text in $keys; do rows[Keys]+=$name$'\t'k$'\t'$text$'\n'; done
+
+  local -A shown
+  for cat in $cats; do
+    entries=(${(f)rows[$cat]})
+    [[ -n $pat && $cat != (#i)*$pat* ]] && entries=(${(M)entries:#(#i)*$pat*})
+    (( $#entries )) || continue
+    shown[$cat]=${(F)entries}
+    for row in $entries; do (( ${#row%%$'\t'*} > width )) && width=${#row%%$'\t'*}; done
+  done
+  (( $#shown )) || { print "zhelp: nothing matches '$pat'"; return 1 }
+
+  local -a f
+  local room=0   # cut long values to the terminal width, but not when piped
+  [[ -t 1 ]] && (( COLUMNS > width + 20 )) && room=$(( COLUMNS - width - 4 ))
+  for cat in $cats; do
+    (( $+shown[$cat] )) || continue
+    print -P "%B%F{11}$cat%f%b"
+    for row in ${(f)shown[$cat]}; do
+      f=("${(@ps:\t:)row}")
+      text=$f[3]; (( room && ${#text} > room )) && text=${text[1,room-1]}…
+      text=${text//\%/%%}
+      [[ $f[2] == a ]] || text="%F{7}$text%f"
+      print -rP -- "  %F{2}${(r:width:)f[1]}%f  $text"
+    done
+    print
+  done
 }
 
 # ----- Local overrides & cleanup -----
