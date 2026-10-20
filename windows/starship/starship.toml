@@ -1,0 +1,109 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+command_timeout = 1000
+
+format = """
+$directory\
+${custom.giturl}\
+$git_branch\
+$git_state\
+$git_status\
+$fill\
+$nodejs\
+$python\
+$golang\
+$rust\
+$java\
+$dart\
+$package\
+$aws\
+$docker_context\
+$jobs\
+$cmd_duration\
+$line_break\
+$character"""
+
+add_newline = false
+
+[fill]
+symbol = ' '
+
+[character]
+success_symbol = '[➜](bold fg:green)'
+error_symbol = '[➜](bold fg:red)'
+
+[directory]
+style = "bold bright-yellow"
+format = "[$path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[custom.giturl]
+# disabled = true
+os = "unix"
+description = "Display symbol for remote Git server"
+command = """
+GIT_REMOTE=$(command git config --get remote.origin.url)
+if [[ "$GIT_REMOTE" =~ "github" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "gitlab" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "bitbucket" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "git" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+else
+    GIT_REMOTE_SYMBOL=" "
+fi
+echo "$GIT_REMOTE_SYMBOL "
+"""
+when = true
+require_repo = true
+format = "[at](white) $output  "
+
+[git_branch]
+symbol = " "
+format =  '[on](white) [$symbol$branch]($style) '
+
+[git_status]
+format = '[($all_status$ahead_behind )]($style)'
+
+[nodejs]
+symbol = ' '
+
+[python]
+symbol = ' '
+
+[golang]
+symbol = '󰟓 '
+style = 'bold bright-green'
+
+[rust]
+symbol = '󱘗 '
+
+[java]
+style = 'bold red'
+symbol = ' '
+
+[dart]
+symbol = ' '
+
+[package]
+symbol = ' '
+style = 'bold yellow'
+
+[aws]
+symbol = ' '
+style = 'yellow'
+format = '[$symbol($profile )(\[$duration\] )]($style)'
+
+[docker_context]
+symbol = ' '
+format = '[$symbol$context]($style) '
+
+[jobs]
+symbol = ' '
+
+[cmd_duration]
+style = 'bright-black'
+format = '[$duration]($style)'

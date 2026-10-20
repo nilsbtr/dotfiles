@@ -1,0 +1,87 @@
+[user]
+	name = 
+	email = 
+	signingkey = 
+
+[gpg]
+	format = openpgp
+	program = "C:/Program Files/GnuPG/bin/gpg.exe"
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = code --wait
+	autocrlf = false
+	fileMode = false
+	safecrlf = warn
+	longpaths = true
+	ignorecase = true
+	quotepath = false
+	fsmonitor = true
+	untrackedCache = true
+	pager = delta
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	gpgsign = true
+	sort = version:refname
+
+[status]
+	short = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	dark = true
+	syntax-theme = ansi
+	minus-style = syntax "#2b1c1a"
+	minus-emph-style = syntax "#4d2e29"
+	plus-style = syntax "#19251e"
+	plus-emph-style = syntax "#2a4133"
+
+[merge]
+	conflictStyle = zdiff3
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[commit]
+	gpgsign = true
+	verbose = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	writeCommitGraph = true
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+
+[credential]
+	helper = manager
+
+[http]
+	sslBackend = schannel
+
+[maintenance]
+	auto = true
+	strategy = incremental
