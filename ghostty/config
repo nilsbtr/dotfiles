@@ -1,5 +1,5 @@
 theme = vesper
-font-family = "Geist Mono"
+font-family = "GeistMono Nerd Font Mono"
 font-feature = "-calt, -liga, -dlig"
 window-padding-x = 12
 window-padding-y = 12

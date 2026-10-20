@@ -109,10 +109,8 @@ if (( $+commands[vivid] )); then
 fi
 
 # ----- mise (per-project Node / Python / Go / Java versions) -----
-# Also read .nvmrc / .node-version / .python-version / .go-version / .java-version.
+# Settings (incl. .nvmrc / .python-version support) live in ~/.config/mise/config.toml.
 # mise sets JAVA_HOME itself, don't export it here.
-export MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS=node,python,go,java
-
 # Before completions so mise-managed tools (uv, pnpm, ...) are found there.
 # Not cached: its output embeds the current PATH.
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
@@ -346,6 +344,7 @@ alias glog='git log --oneline --graph --decorate -20'
 alias d=docker
 alias dc='docker compose'
 alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+(( $+commands[lazydocker] )) && alias lzd=lazydocker
 
 # Python
 (( $+commands[python] )) || alias python=python3

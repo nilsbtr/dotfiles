@@ -1,0 +1,19 @@
+# Global gitignore, read automatically from ~/.config/git/ignore (macOS, Linux, Windows)
+
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+*.swp
+*~
+
+# Secrets
+.env
+.env.local
+.env.*.local

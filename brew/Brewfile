@@ -22,9 +22,12 @@ brew "tree"
 brew "gh"
 brew "git"
 brew "git-delta"
+brew "lazygit"
 
 # Dev tools
+brew "direnv"
 brew "jq"
+brew "lazydocker"
 brew "mise"
 brew "mkcert"
 brew "neovim"
@@ -35,6 +38,7 @@ brew "usage"
 brew "gnupg"
 brew "mtr"
 brew "nmap"
+brew "pinentry-mac"
 
 # Editors & terminal
 cask "ghostty"

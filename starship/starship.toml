@@ -12,15 +12,10 @@ $fill\
 $nodejs\
 $python\
 $java\
-$php\
 $golang\
 $rust\
-$kotlin\
-$lua\
-$ruby\
-$haskell\
+$dart\
 $package\
-$aws\
 $docker_context\
 $jobs\
 $cmd_duration\
@@ -34,7 +29,6 @@ palette = "catppuccin_mocha"
 symbol = ' '
 
 [character]
-disabled = false
 success_symbol = '[➜](bold fg:green)'
 error_symbol = '[➜](bold fg:red)'
 
@@ -44,18 +38,11 @@ format = "[$path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
-# [directory.substitutions]
-# "Documents" = "󰈙 "
-# "Downloads" = " "
-# "Music" = "󰝚 "
-# "Pictures" = " "
-# "Developer" = " "
-
 [custom.giturl]
 # disabled = true
 description = "Display symbol for remote Git server"
 command = """
-GIT_REMOTE=$(command git ls-remote --get-url 2> /dev/null)
+GIT_REMOTE=$(command git config --get remote.origin.url)
 if [[ "$GIT_REMOTE" =~ "github" ]]; then
     GIT_REMOTE_SYMBOL=" "
 elif [[ "$GIT_REMOTE" =~ "gitlab" ]]; then
@@ -69,7 +56,8 @@ else
 fi
 echo "$GIT_REMOTE_SYMBOL "
 """
-when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+when = true
+require_repo = true
 format = "[at](text) $output  "
 
 [git_branch]
@@ -89,38 +77,21 @@ symbol = ' '
 style = 'bold red'
 symbol = ' '
 
-[php]
-symbol = ' '
-
 [golang]
 symbol = '󰟓 '
 
 [rust]
 symbol = '󱘗 '
 
-[kotlin]
-symbol = ' '
-
-[lua]
-symbol = ' '
-
-[ruby]
-symbol = ' '
-
-[haskell]
-symbol = ' '
+[dart]
+symbol = ' '
 
 [package]
 symbol = ' '
 
-[aws]
-symbol = ' '
-style = 'yellow'
-format = '[$symbol($profile )(\[$duration\] )]($style)'
-
 [docker_context]
 symbol = ' '
-format = '[$symbol]($style) $path'
+format = '[$symbol$context]($style) '
 
 [jobs]
 symbol = ' '

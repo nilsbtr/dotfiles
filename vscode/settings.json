@@ -134,6 +134,19 @@
     "git.ignoreRebaseWarning": true,
     "git.openRepositoryInParentFolders": "never",
     "git.suggestSmartCommit": false,
+    "gitlens.views.scm.grouped.views": {
+        "commits": true,
+        "branches": true,
+        "remotes": true,
+        "stashes": true,
+        "tags": true,
+        "worktrees": true,
+        "contributors": true,
+        "fileHistory": false,
+        "repositories": true,
+        "searchAndCompare": false,
+        "launchpad": false
+    },
 
     // ----- Integrated terminal -----
     "terminal.integrated.scrollback": 10000,
@@ -145,6 +158,7 @@
     "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
     // on Windows: "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Consolas', 'Courier New', monospace",
     "terminal.integrated.fontSize": 14,
+    "terminal.integrated.macOptionIsMeta": true,   // Option = Alt for zsh/fzf key bindings
 
     // ----- Shared tooling, linting, schemas, and extensions -----
     "prettier.requireConfig": true,
@@ -183,6 +197,7 @@
     "js/ts.tsdk.promptToUseWorkspaceVersion": true,
 
     // ----- Python tooling -----
+    "python.languageServer": "Default",
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.autoImportCompletions": true,
     "python.analysis.autoSearchPaths": true,
@@ -190,6 +205,8 @@
     "python.terminal.activateEnvironment": true,
     "ruff.nativeServer": "on",
     "ruff.organizeImports": true,
+    "ty.disableLanguageServices": true,   // ty off for now (Pylance is the language server)
+    "ty.diagnosticMode": "off",
 
     // ----- Go tooling -----
     "go.toolsManagement.autoUpdate": true,
@@ -281,19 +298,6 @@
     // ----- Miscellaneous -----
     "redhat.telemetry.enabled": false,
     "powershell.promptToUpdatePowerShell": false,
-    "gitlens.views.scm.grouped.views": {
-        "commits": true,
-        "branches": true,
-        "remotes": true,
-        "stashes": true,
-        "tags": true,
-        "worktrees": true,
-        "contributors": true,
-        "fileHistory": false,
-        "repositories": true,
-        "searchAndCompare": false,
-        "launchpad": false
-    },
     "js/ts.experimental.useTsgo": true,
     "yaml.disableSchemaDetection": [
         "**/.github/workflows/*.yml",
@@ -302,6 +306,5 @@
         "**/.gitea/workflows/*.yaml",
         "**/.forgejo/workflows/*.yml",
         "**/.forgejo/workflows/*.yaml"
-    ],
-    "python.languageServer": "Default"
+    ]
 }

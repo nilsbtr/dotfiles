@@ -13,5 +13,7 @@ just = "latest"
 flutter = "latest"
 
 [settings]
+# also read .nvmrc / .node-version / .python-version / .go-version / .java-version
+idiomatic_version_file_enable_tools = ["node", "python", "go", "java"]
 # let `go install` use $GOPATH/bin (~/go/bin) instead of the per-version mise dir
 go_set_gobin = false
