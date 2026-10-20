@@ -38,7 +38,6 @@ brew "usage"
 brew "gnupg"
 brew "mtr"
 brew "nmap"
-brew "pinentry-mac"
 
 # Editors & terminal
 cask "ghostty"

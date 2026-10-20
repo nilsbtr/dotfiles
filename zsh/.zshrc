@@ -109,7 +109,6 @@ if (( $+commands[vivid] )); then
 fi
 
 # ----- mise (per-project Node / Python / Go / Java versions) -----
-# Settings (incl. .nvmrc / .python-version support) live in ~/.config/mise/config.toml.
 # mise sets JAVA_HOME itself, don't export it here.
 # Before completions so mise-managed tools (uv, pnpm, ...) are found there.
 # Not cached: its output embeds the current PATH.

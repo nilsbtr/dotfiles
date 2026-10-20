@@ -11,11 +11,12 @@ $git_status\
 $fill\
 $nodejs\
 $python\
-$java\
 $golang\
 $rust\
+$java\
 $dart\
 $package\
+$aws\
 $docker_context\
 $jobs\
 $cmd_duration\
@@ -73,21 +74,26 @@ symbol = ' '
 [python]
 symbol = ' '
 
-[java]
-style = 'bold red'
-symbol = ' '
-
 [golang]
 symbol = '󰟓 '
 
 [rust]
 symbol = '󱘗 '
 
+[java]
+style = 'bold red'
+symbol = ' '
+
 [dart]
 symbol = ' '
 
 [package]
 symbol = ' '
+
+[aws]
+symbol = ' '
+style = 'yellow'
+format = '[$symbol($profile )(\[$duration\] )]($style)'
 
 [docker_context]
 symbol = ' '
