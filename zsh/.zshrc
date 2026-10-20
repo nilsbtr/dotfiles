@@ -1,6 +1,6 @@
-# ~/.zshrc — fast, framework-free zsh for Ghostty · Node/React · Python · Go
+# ~/.zshrc: fast, framework-free zsh for Ghostty, Node/React, Python, Go
 #
-# Install the tools (all optional — every section is guarded):
+# Install the tools (all optional, every section is guarded):
 #   macOS : brew install starship mise usage fzf fd ripgrep bat eza zoxide vivid
 #   Linux : apt install zsh fzf fd-find ripgrep bat zoxide eza vivid
 #           + curl -sS https://starship.rs/install.sh | sh
@@ -8,13 +8,13 @@
 #   Then  : mise install
 #
 # Plugins self-install on first launch (needs git). Update everything: zsh-update
-# Machine-specific settings / secrets → ~/.zshrc.local (sourced last, never committed)
-# PATH for non-interactive shells (scripts, `zsh -c`) → ~/.zshenv
+# Machine-specific settings / secrets: ~/.zshrc.local (sourced last, never committed)
+# PATH for non-interactive shells (scripts, `zsh -c`): ~/.zshenv
 # Measure startup: zsh-bench      Profile startup: ZPROF=1 zsh -i -c exit
 
 [[ -n $ZPROF ]] && zmodload zsh/zprof
 
-# ─── Directories ─────────────────────────────────────────────────────────────
+# ----- Directories -----
 : ${XDG_CONFIG_HOME:=$HOME/.config} ${XDG_CACHE_HOME:=$HOME/.cache}
 : ${XDG_DATA_HOME:=$HOME/.local/share} ${XDG_STATE_HOME:=$HOME/.local/state}
 export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
@@ -26,7 +26,7 @@ for _d in $ZSH_CACHE/completions $ZSH_PLUGINS $XDG_STATE_HOME/{zsh,less,python,n
 done
 unset _d
 
-# ─── Options ─────────────────────────────────────────────────────────────────
+# ----- Options -----
 setopt EXTENDED_GLOB INTERACTIVE_COMMENTS NO_BEEP NO_FLOW_CONTROL
 setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
 setopt COMPLETE_IN_WORD ALWAYS_TO_END
@@ -40,10 +40,10 @@ SAVEHIST=100000
 setopt EXTENDED_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_SPACE HIST_REDUCE_BLANKS HIST_VERIFY   # leading space = not saved
 
-# ─── PATH ────────────────────────────────────────────────────────────────────
+# ----- PATH -----
 typeset -U path fpath   # keep entries unique
 
-# Homebrew (Apple Silicon, Linuxbrew, Intel) — static, no `brew shellenv` fork
+# Homebrew (Apple Silicon, Linuxbrew, Intel), static, no `brew shellenv` fork
 for _p in /opt/homebrew /home/linuxbrew/.linuxbrew /usr/local; do
   if [[ -x $_p/bin/brew ]]; then
     export HOMEBREW_PREFIX=$_p
@@ -71,12 +71,12 @@ path=(
 # App-installed CLIs, appended (skipped if not installed)
 export ANDROID_HOME=$HOME/Library/Android/sdk
 path+=(
-  "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"(N-/)  # idea, studio, …
+  "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"(N-/)  # idea, studio, ...
   $HOME/.orbstack/bin(N-/)                                            # orb, docker, kubectl
   $ANDROID_HOME/{emulator,platform-tools}(N-/)                        # emulator, adb
 )
 
-# ─── Environment ─────────────────────────────────────────────────────────────
+# ----- Environment -----
 export LANG=${LANG:-en_US.UTF-8}
 if (( $+commands[code] )); then export EDITOR='code --wait'; else export EDITOR=vim; fi
 export VISUAL=$EDITOR
@@ -85,7 +85,7 @@ export CLICOLOR=1
 
 # Keep REPL / pager history out of $HOME (dirs created above)
 export LESSHISTFILE=$XDG_STATE_HOME/less/history
-export PYTHON_HISTORY=$XDG_STATE_HOME/python/history   # Python ≥ 3.13
+export PYTHON_HISTORY=$XDG_STATE_HOME/python/history   # Python >= 3.13
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node/repl_history
 
 # No telemetry / nagging
@@ -108,16 +108,16 @@ if (( $+commands[vivid] )); then
   unset _lsc
 fi
 
-# ─── mise (per-project Node / Python / Go / Java versions) ───────────────────
+# ----- mise (per-project Node / Python / Go / Java versions) -----
 # Also read .nvmrc / .node-version / .python-version / .go-version / .java-version.
-# mise sets JAVA_HOME itself — don't export it here.
+# mise sets JAVA_HOME itself, don't export it here.
 export MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS=node,python,go,java
 
-# Before completions so mise-managed tools (uv, pnpm, …) are found there.
+# Before completions so mise-managed tools (uv, pnpm, ...) are found there.
 # Not cached: its output embeds the current PATH.
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 
-# ─── Helpers ─────────────────────────────────────────────────────────────────
+# ----- Helpers -----
 autoload -Uz add-zsh-hook
 
 # Debian/Ubuntu ship fd/bat under other names
@@ -125,7 +125,7 @@ _fd=${commands[fd]:+fd};   [[ -z $_fd && -n ${commands[fdfind]} ]] && _fd=fdfind
 _bat=${commands[bat]:+bat}; [[ -z $_bat && -n ${commands[batcat]} ]] && _bat=batcat
 
 # Cache `tool init zsh` output; regenerated only when the tool's binary changes
-_cached_init() {   # _cached_init <name> <cmd> [args…]
+_cached_init() {   # _cached_init <name> <cmd> [args...]
   local name=$1 bin=${commands[$2]}
   shift
   [[ -n $bin ]] || return 1
@@ -138,7 +138,7 @@ _cached_init() {   # _cached_init <name> <cmd> [args…]
 }
 
 # Generate a completion file once; regenerated when the tool's binary is newer
-_gen_comp() {      # _gen_comp <name> <cmd> [args…]  →  completions/_<name>
+_gen_comp() {      # _gen_comp <name> <cmd> [args...]  ->  completions/_<name>
   local out=$ZSH_CACHE/completions/_$1 bin=${commands[$2]}
   shift
   [[ -n $bin ]] || return 0
@@ -147,13 +147,13 @@ _gen_comp() {      # _gen_comp <name> <cmd> [args…]  →  completions/_<name>
   _comp_changed=1
 }
 
-# ─── Plugins: install (git clone on first run, byte-compiled) ────────────────
+# ----- Plugins: install (git clone on first run, byte-compiled) -----
 _plug_compile() { local f; for f in $1/**/*.zsh(N.); do zcompile -R -- $f 2>/dev/null; done }
 _plug() {
   local dir=$ZSH_PLUGINS/${1:t}
   [[ -d $dir ]] && return 0
   (( $+commands[git] )) || return 1
-  print -P "%F{cyan}zsh:%f installing $1 …"
+  print -P "%F{cyan}zsh:%f installing $1 ..."
   git clone --quiet --depth=1 https://github.com/$1.git $dir && _plug_compile $dir
 }
 
@@ -163,7 +163,7 @@ _plug zsh-users/zsh-autosuggestions
 _plug zdharma-continuum/fast-syntax-highlighting
 _plug MichaelAquilina/zsh-you-should-use
 
-# ─── Completion ──────────────────────────────────────────────────────────────
+# ----- Completion -----
 _gen_comp docker docker completion zsh
 _gen_comp just   just --completions zsh
 _gen_comp mise   mise completion zsh          # needs `usage`
@@ -206,20 +206,20 @@ zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
 zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview \
   '[[ $group == "[process ID]" ]] && ps -p $word -o comm=,args='
 
-# ─── Key bindings (Emacs mode) ───────────────────────────────────────────────
+# ----- Key bindings (Emacs mode) -----
 bindkey -e
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search edit-command-line
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 zle -N edit-command-line
 
-bindkey '^[[A' up-line-or-beginning-search     # ↑ / ↓ search history by prefix
+bindkey '^[[A' up-line-or-beginning-search     # Up / Down search history by prefix
 bindkey '^[OA' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
-bindkey '^[[1;5C' forward-word                 # Ctrl-→ / Ctrl-←
+bindkey '^[[1;5C' forward-word                 # Ctrl-Right / Ctrl-Left
 bindkey '^[[1;5D' backward-word
-bindkey '^[[1;3C' forward-word                 # Alt-→ / Alt-← (macos-option-as-alt)
+bindkey '^[[1;3C' forward-word                 # Alt-Right / Alt-Left (macos-option-as-alt)
 bindkey '^[[1;3D' backward-word
 bindkey '^[[H' beginning-of-line               # Home / End / Delete
 bindkey '^[[F' end-of-line
@@ -227,8 +227,8 @@ bindkey '^[[3~' delete-char
 bindkey '^X^E' edit-command-line               # open command in $EDITOR
 bindkey '^ ' autosuggest-accept                # Ctrl-Space accepts suggestion
 
-# ─── Plugins: load (order matters) ───────────────────────────────────────────
-# compinit → fzf-tab → fzf (so `**<Tab>` falls back to fzf-tab) → autosuggest → highlighting
+# ----- Plugins: load (order matters) -----
+# compinit, fzf-tab, fzf (so `**<Tab>` falls back to fzf-tab), autosuggest, highlighting
 [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.plugin.zsh ]] && source $ZSH_PLUGINS/fzf-tab/fzf-tab.plugin.zsh
 
 # fzf: Ctrl-T files, Alt-C dirs, Ctrl-R history
@@ -241,7 +241,7 @@ if (( $+commands[fzf] )); then
   export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border=rounded --info=inline --cycle'
   export FZF_CTRL_T_OPTS="--preview '${_bat:-cat} --color=always --style=numbers --line-range=:300 {} 2>/dev/null || cat {}'"
   export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {} 2>/dev/null || ls {}'"
-  # fzf ≥ 0.48 has `fzf --zsh`; fall back to distro-shipped scripts on older versions
+  # fzf >= 0.48 has `fzf --zsh`; fall back to distro-shipped scripts on older versions
   _cached_init fzf fzf --zsh || {
     for _f in /usr/share/{doc/fzf/examples,fzf}/{key-bindings,completion}.zsh(N); do source $_f; done
     unset _f
@@ -259,7 +259,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # don't re-wrap every widget before each promp
 [[ -f $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh ]] &&
   source $ZSH_PLUGINS/zsh-you-should-use/you-should-use.plugin.zsh   # reminds you of existing aliases
 
-# ─── Tools ───────────────────────────────────────────────────────────────────
+# ----- Tools -----
 _cached_init zoxide zoxide init zsh        # z <dir>, zi = interactive
 _cached_init direnv direnv hook zsh        # only if installed
 
@@ -281,8 +281,8 @@ _auto_venv() {
 add-zsh-hook chpwd _auto_venv
 _auto_venv
 
-# ─── Prompt ──────────────────────────────────────────────────────────────────
-# Starship, or a minimal built-in fallback: dir, git branch, ❯ (red on error)
+# ----- Prompt -----
+# Starship, or a minimal built-in fallback: dir, git branch, > (red on error)
 if (( $+commands[starship] )); then
   _cached_init starship starship init zsh --print-full-init
 else
@@ -290,10 +290,10 @@ else
   add-zsh-hook precmd vcs_info
   zstyle ':vcs_info:git:*' formats ' %F{magenta}%b%f'
   setopt PROMPT_SUBST
-  PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})❯%f '
+  PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})>%f '
 fi
 
-# ─── Aliases ─────────────────────────────────────────────────────────────────
+# ----- Aliases -----
 # General
 alias ...='cd ../..' ....='cd ../../..'
 alias -- -='cd -'
@@ -360,7 +360,7 @@ alias gomt='go mod tidy'
 # Editor
 (( $+commands[code] )) && alias vsc='code .'
 
-# ─── Functions ───────────────────────────────────────────────────────────────
+# ----- Functions -----
 # General
 mkcd() { mkdir -p -- "$1" && cd -- "$1" }
 
@@ -414,7 +414,7 @@ nuke-nm() {
   read -q "?Delete ${#dirs} folder(s)? [y/N] " && { print; rm -rf -- $dirs }
 }
 
-# Python: create (if needed) and activate .venv — uses uv when available
+# Python: create (if needed) and activate .venv, uses uv when available
 venv() {
   if [[ ! -d .venv ]]; then
     if (( $+commands[uv] )); then uv venv "$@"; else python3 -m venv .venv; fi || return
@@ -435,7 +435,7 @@ serve()    { python3 -m http.server ${1:-8000} }
 zsh-update() {
   local d
   for d in $ZSH_PLUGINS/*(N/); do
-    print -P "%F{cyan}↻%f ${d:t}"
+    print -P "%F{cyan}updating%f ${d:t}"
     git -C $d pull --quiet --ff-only && _plug_compile $d
   done
   local -a junk=($ZSH_CACHE/init-*(N) $ZSH_CACHE/ls-colors(N) $ZSH_CACHE/completions/_*(N) $ZSH_CACHE/zcompdump*(N))
@@ -449,7 +449,7 @@ zsh-bench() {
   for i in {1..10}; do time zsh -i -c exit; done
 }
 
-# ─── Local overrides & cleanup ───────────────────────────────────────────────
+# ----- Local overrides & cleanup -----
 [[ -r ${ZDOTDIR:-$HOME}/.zshrc.local ]] && source ${ZDOTDIR:-$HOME}/.zshrc.local
 
 # Byte-compile this file in the background so the next shell starts faster

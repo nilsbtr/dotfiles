@@ -1,4 +1,4 @@
-# ~/.zshenv — read by every zsh, including scripts, `zsh -c`, editor tasks and git hooks.
+# ~/.zshenv: read by every zsh, including scripts, `zsh -c`, editor tasks and git hooks.
 # Keep it tiny and fork-free: just enough PATH for non-interactive shells.
 # Everything interactive lives in ~/.zshrc (which re-establishes the full PATH).
 
