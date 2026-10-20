@@ -3,6 +3,8 @@
     "window.titleBarStyle": "custom",
     "window.commandCenter": false,
     "workbench.layoutControl.enabled": false,
+    "workbench.activityBar.location": "top",
+    "workbench.browser.showInTitleBar": false,
     "workbench.editor.empty.hint": "hidden",
     "workbench.editor.wrapTabs": false,
     "workbench.editor.tabSizing": "shrink",
