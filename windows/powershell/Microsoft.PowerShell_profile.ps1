@@ -3,7 +3,7 @@
 # Install the tools (all required: nothing checks whether they're on PATH, that costs ~230 ms):
 #   scoop  : scoop install starship vivid fzf fd ripgrep bat eza zoxide delta lazygit lazydocker gh
 #   toolchains (scoop): nodejs-lts pnpm bun python uv ruff go just just-lsp flutter
-#                       java/temurin25-jdk (+ temurin21/17, zulu8; switch with `scoop reset <jdk>`)
+#                       java/temurin25-jdk
 #   modules: Install-Module PSFzf, CompletionPredictor, git-completion -Scope CurrentUser
 #
 # Overview of the aliases and functions below: phelp [filter]
