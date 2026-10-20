@@ -1,0 +1,82 @@
+[user]
+	name = 
+	email = 
+	signingkey = 
+
+[gpg]
+	format = openpgp
+	program = 
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = code --wait
+	autocrlf = false
+	safecrlf = warn
+	fileMode = false
+	longpaths = true
+	ignorecase = true
+	quotepath = false
+	fsmonitor = true
+	untrackedCache = true
+	pager = delta
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	gpgsign = true
+	sort = version:refname
+
+[status]
+	short = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	dark = true
+
+[merge]
+	conflictStyle = zdiff3
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[commit]
+	gpgsign = true
+	verbose = true
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	writeCommitGraph = true
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+
+[credential]
+	helper = osxkeychain
+
+[http]
+	sslBackend = secure-transport
+
+[maintenance]
+	auto = true
+	strategy = incremental

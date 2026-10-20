@@ -1,0 +1,17 @@
+[tools]
+node = "lts"
+pnpm = "latest"
+bun = "latest"
+python = "latest"
+uv = "latest"
+ruff = "latest"
+go = "latest"
+# first entry is the default (JAVA_HOME); the others stay installed for older projects
+java = ["temurin-25", "temurin-21", "temurin-17", "zulu-8"]
+just = "latest"
+"github:terror/just-lsp" = "latest"
+flutter = "latest"
+
+[settings]
+# let `go install` use $GOPATH/bin (~/go/bin) instead of the per-version mise dir
+go_set_gobin = false

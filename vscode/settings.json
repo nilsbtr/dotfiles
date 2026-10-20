@@ -1,0 +1,307 @@
+{
+    // ----- Workbench chrome, layout, and tabs -----
+    "window.titleBarStyle": "custom",
+    "window.commandCenter": false,
+    "workbench.layoutControl.enabled": false,
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.editor.wrapTabs": false,
+    "workbench.editor.tabSizing": "shrink",
+
+    // ----- Theme, icons, and color polish -----
+    "workbench.colorTheme": "Monokai Pro (Filter Ristretto)",
+    "workbench.iconTheme": "charmed-icons",
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#ffffff08",
+        "editorBracketMatch.border": "#00000000",
+        "editorBracketMatch.background": "#7c3aed22"
+    },
+
+    // ----- Explorer, breadcrumbs, and tree UI -----
+    "explorer.compactFolders": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "breadcrumbs.filePath": "off",
+    "workbench.list.smoothScrolling": true,
+    "workbench.tree.indent": 8,
+    "workbench.tree.renderIndentGuides": "always",
+
+    // ----- Files, autosave, and whitespace hygiene -----
+    "files.autoSave": "onWindowChange",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+
+    // ----- File, search, and watcher exclusions -----
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/__pycache__": true
+    },
+    "search.exclude": {
+        "**/.git": true,
+        "**/.next": true,
+        "**/.mypy_cache": true,
+        "**/.nox": true,
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.turbo": true,
+        "**/.venv": true,
+        "**/__pycache__": true,
+        "**/build": true,
+        "**/coverage": true,
+        "**/dist": true,
+        "**/node_modules": true,
+        "**/out": true,
+        "**/venv": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/.hg/store/**": true,
+        "**/.next/**": true,
+        "**/.venv/**": true,
+        "**/__pycache__/**": true,
+        "**/build/**": true,
+        "**/coverage/**": true,
+        "**/dist/**": true,
+        "**/node_modules/**": true,
+        "**/out/**": true,
+        "**/venv/**": true
+    },
+
+    // ----- Editor editing, formatting, and suggestions -----
+    "editor.detectIndentation": true,
+    "editor.linkedEditing": true,
+    "editor.formatOnSave": false,
+    "editor.formatOnSaveMode": "file",
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "editor.inlineSuggest.enabled": true,
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": false
+    },
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.suggestSelection": "recentlyUsedByPrefix",
+    "editor.suggest.preview": true,
+    "editor.suggest.insertMode": "insert",
+    "editor.snippetSuggestions": "top",
+    "editor.wordBasedSuggestions": "off",
+    "editor.inlayHints.enabled": "on",
+
+    // ----- Editor visuals, guides, and scrolling -----
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": false,
+    "editor.guides.indentation": true,
+    "editor.guides.highlightActiveIndentation": true,
+    "editor.matchBrackets": "always",
+    "editor.minimap.enabled": false,
+    "editor.scrollBeyondLastLine": false,
+    "editor.smoothScrolling": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": false,
+    "editor.renderLineHighlight": "gutter",
+    "editor.selectionHighlight": true,
+    "editor.overviewRulerBorder": false,
+    "editor.hideCursorInOverviewRuler": false,
+
+    // ----- Editor font, rulers, and cursor -----
+    "editor.fontFamily": "'GeistMono Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+    // on Windows: "editor.fontFamily": "'GeistMono Nerd Font Mono', 'Consolas', 'Courier New', monospace",
+    "editor.fontLigatures": false,
+    "editor.fontSize": 14,
+    "editor.rulers": [
+        100
+    ],
+    "editor.cursorBlinking": "phase",
+    "editor.cursorStyle": "line-thin",
+    "editor.cursorWidth": 2,
+
+    // ----- Diff, source control, and git behavior -----
+    "diffEditor.renderSideBySide": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "scm.diffDecorations": "all",
+    "git.autofetch": true,
+    "git.confirmSync": true,
+    "git.ignoreRebaseWarning": true,
+    "git.openRepositoryInParentFolders": "never",
+    "git.suggestSmartCommit": false,
+
+    // ----- Integrated terminal -----
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.smoothScrolling": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.tabs.enabled": true,
+    "terminal.integrated.tabs.hideCondition": "singleTerminal",
+    "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+    // on Windows: "terminal.integrated.fontFamily": "'GeistMono Nerd Font Mono', 'Consolas', 'Courier New', monospace",
+    "terminal.integrated.fontSize": 14,
+
+    // ----- Shared tooling, linting, schemas, and extensions -----
+    "prettier.requireConfig": true,
+    "prettier.useEditorConfig": true,
+    "eslint.format.enable": false,
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "emmet.triggerExpansionOnTab": true,
+    "tailwindCSS.emmetCompletions": true,
+    "json.schemaDownload.enable": true,
+    "json.schemaDownload.trustedDomains": {
+        "http://json.schemastore.org": true,
+        "https://developer.microsoft.com/json-schemas/": true,
+        "https://json-schema.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://raw.githubusercontent.com/devcontainers/spec/": true,
+        "https://raw.githubusercontent.com/microsoft/vscode/": true,
+        "https://schemastore.azurewebsites.net/": true,
+        "https://ui.shadcn.com": true,
+        "https://www.schemastore.org/": true
+    },
+    "extensions.ignoreRecommendations": true,
+
+    // ----- JavaScript / TypeScript tooling -----
+    "js/ts.updateImportsOnFileMove.enabled": "always",
+    "js/ts.preferences.preferTypeOnlyAutoImports": true,
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+
+    // ----- Python tooling -----
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.terminal.activateEnvironment": true,
+    "ruff.nativeServer": "on",
+    "ruff.organizeImports": true,
+
+    // ----- Go tooling -----
+    "go.toolsManagement.autoUpdate": true,
+    "gopls": {
+        "gofumpt": true,
+        "usePlaceholders": true,
+        "completeUnimported": true,
+        "staticcheck": true,
+        "semanticTokens": true,
+        "analyses": {
+            "shadow": true,
+            "unusedparams": true
+        }
+    },
+
+    // ----- Language-specific defaults -----
+    "[javascript][javascriptreact][typescript][typescriptreact]": {
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit"
+        }
+    },
+    "[html]": {
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[css][scss][less]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[json][jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.trimTrailingWhitespace": false
+    },
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "explicit",
+            "source.organizeImports.ruff": "explicit"
+        },
+        "editor.formatOnSave": true
+    },
+    "[go]": {
+        "editor.defaultFormatter": "golang.go",
+        "editor.formatOnSave": true
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+
+    // ----- AI settings -----
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.editor.enableCodeActions": false,
+    "github.copilot.renameSuggestions.triggerAutomatically": false,
+    "chat.agent.enabled": false,
+    "chat.agentsControl.enabled": "hidden",
+    "chat.titleBar.signIn.enabled": false,
+    "chat.titleBar.openInAgentsWindow.enabled": false,
+    "chat.viewSessions.enabled": false,
+    "chat.mcp.access": "none",
+    "git.addAICoAuthor": "off",
+    "extensions.supportAgentsWindow": {
+        "monokai.theme-monokai-pro-vscode": true
+    },
+
+    // ----- Miscellaneous -----
+    "redhat.telemetry.enabled": false,
+    "powershell.promptToUpdatePowerShell": false,
+    "gitlens.views.scm.grouped.views": {
+        "commits": true,
+        "branches": true,
+        "remotes": true,
+        "stashes": true,
+        "tags": true,
+        "worktrees": true,
+        "contributors": true,
+        "fileHistory": false,
+        "repositories": true,
+        "searchAndCompare": false,
+        "launchpad": false
+    },
+    "js/ts.experimental.useTsgo": true,
+    "yaml.disableSchemaDetection": [
+        "**/.github/workflows/*.yml",
+        "**/.github/workflows/*.yaml",
+        "**/.gitea/workflows/*.yml",
+        "**/.gitea/workflows/*.yaml",
+        "**/.forgejo/workflows/*.yml",
+        "**/.forgejo/workflows/*.yaml"
+    ],
+    "python.languageServer": "Default"
+}

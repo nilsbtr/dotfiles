@@ -1,0 +1,158 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+command_timeout = 1000
+
+format = """
+$directory\
+${custom.giturl}\
+$git_branch\
+$git_state\
+$git_status\
+$fill\
+$nodejs\
+$python\
+$java\
+$php\
+$golang\
+$rust\
+$kotlin\
+$lua\
+$ruby\
+$haskell\
+$package\
+$aws\
+$docker_context\
+$jobs\
+$cmd_duration\
+$line_break\
+$character"""
+
+add_newline = false
+palette = "catppuccin_mocha"
+
+[fill]
+symbol = ' '
+
+[character]
+disabled = false
+success_symbol = '[➜](bold fg:green)'
+error_symbol = '[➜](bold fg:red)'
+
+[directory]
+style = "bold red"
+format = "[$path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# [directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Music" = "󰝚 "
+# "Pictures" = " "
+# "Developer" = " "
+
+[custom.giturl]
+# disabled = true
+description = "Display symbol for remote Git server"
+command = """
+GIT_REMOTE=$(command git ls-remote --get-url 2> /dev/null)
+if [[ "$GIT_REMOTE" =~ "github" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "gitlab" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "bitbucket" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+elif [[ "$GIT_REMOTE" =~ "git" ]]; then
+    GIT_REMOTE_SYMBOL=" "
+else
+    GIT_REMOTE_SYMBOL=" "
+fi
+echo "$GIT_REMOTE_SYMBOL "
+"""
+when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+format = "[at](text) $output  "
+
+[git_branch]
+symbol = " "
+format =  '[on](text) [$symbol$branch]($style) '
+
+[git_status]
+format = '[($all_status$ahead_behind )]($style)'
+
+[nodejs]
+symbol = ' '
+
+[python]
+symbol = ' '
+
+[java]
+style = 'bold red'
+symbol = ' '
+
+[php]
+symbol = ' '
+
+[golang]
+symbol = '󰟓 '
+
+[rust]
+symbol = '󱘗 '
+
+[kotlin]
+symbol = ' '
+
+[lua]
+symbol = ' '
+
+[ruby]
+symbol = ' '
+
+[haskell]
+symbol = ' '
+
+[package]
+symbol = ' '
+
+[aws]
+symbol = ' '
+style = 'yellow'
+format = '[$symbol($profile )(\[$duration\] )]($style)'
+
+[docker_context]
+symbol = ' '
+format = '[$symbol]($style) $path'
+
+[jobs]
+symbol = ' '
+
+[cmd_duration]
+style = 'gray'
+format = '[$duration]($style)'
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

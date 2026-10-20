@@ -1,0 +1,12 @@
+# Machine-specific settings (sourced last by ~/.zshrc)
+
+# JetBrains Toolbox shell scripts (idea, studio, …)
+path+=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts")
+
+# OrbStack (orb, orbctl, kubectl; docker also lives in /usr/local/bin)
+path+=($HOME/.orbstack/bin)
+
+# Keep REPL / pager history out of $HOME
+export LESSHISTFILE=$XDG_STATE_HOME/less/history
+export PYTHON_HISTORY=$XDG_STATE_HOME/python/history       # Python ≥ 3.13
+export NODE_REPL_HISTORY=$XDG_STATE_HOME/node/repl_history

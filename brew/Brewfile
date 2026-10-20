@@ -1,0 +1,88 @@
+# Install: brew bundle --file=brew/Brewfile
+
+# Taps
+tap "nubjs/tap"
+
+# Shell
+brew "fzf"
+brew "starship"
+brew "zoxide"
+brew "zsh"
+
+# Files & search
+brew "bat"
+brew "dust"
+brew "eza"
+brew "fd"
+brew "ripgrep"
+brew "tldr"
+brew "tree"
+
+# Git
+brew "gh"
+brew "git"
+brew "git-delta"
+
+# Dev tools
+brew "jq"
+brew "mise"
+brew "mkcert"
+brew "neovim"
+brew "nubjs/tap/nub", trusted: true
+brew "usage"
+
+# Network & security
+brew "gnupg"
+brew "mtr"
+brew "nmap"
+
+# Editors & terminal
+cask "ghostty"
+cask "visual-studio-code"
+cask "zed"
+
+# AI
+cask "claude-code"
+cask "codex"
+cask "t3-code"
+
+# Dev apps
+cask "beekeeper-studio"
+cask "burp-suite"
+cask "orbstack"
+cask "yaak"
+
+# Git clients
+cask "fork"
+cask "github"
+cask "tower"
+
+# Browsers
+cask "brave-browser"
+cask "google-chrome"
+
+# Communication & notes
+cask "legcord"
+cask "linear"
+cask "obsidian"
+
+# Files & sharing
+cask "blip"
+cask "dropbox"
+cask "localsend"
+cask "qbittorrent"
+
+# Media & documents
+cask "adobe-acrobat-reader"
+cask "iina"
+
+# Utilities & VPN
+cask "appcleaner"
+cask "surfshark"
+cask "tunnelblick"
+
+# Fonts
+cask "font-geist-mono-nerd-font"
+cask "font-inter"
+cask "font-jetbrains-mono"
+cask "font-jetbrains-mono-nerd-font"
