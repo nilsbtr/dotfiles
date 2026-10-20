@@ -6,8 +6,8 @@ tap "nubjs/tap"
 # Shell
 brew "fzf"
 brew "starship"
+brew "vivid"
 brew "zoxide"
-brew "zsh"
 
 # Files & search
 brew "bat"

@@ -1,14 +1,15 @@
 # ~/.zshrc — fast, framework-free zsh for Ghostty · Node/React · Python · Go
 #
 # Install the tools (all optional — every section is guarded):
-#   macOS : brew install starship mise fzf fd ripgrep bat eza zoxide uv
-#   Linux : apt install zsh fzf fd-find ripgrep bat zoxide eza
+#   macOS : brew install starship mise fzf fd ripgrep bat eza zoxide vivid uv
+#   Linux : apt install zsh fzf fd-find ripgrep bat zoxide eza vivid
 #           + curl -sS https://starship.rs/install.sh | sh
 #           + curl https://mise.run | sh
 #           + curl -LsSf https://astral.sh/uv/install.sh | sh
 #
 # Plugins self-install on first launch (needs git). Update everything: zsh-update
 # Machine-specific settings / secrets → ~/.zshrc.local (sourced last, never committed)
+# PATH for non-interactive shells (scripts, `zsh -c`) → ~/.zshenv
 # Measure startup: zsh-bench      Profile startup: ZPROF=1 zsh -i -c exit
 
 [[ -n $ZPROF ]] && zmodload zsh/zprof
@@ -20,7 +21,7 @@ export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
 
 ZSH_CACHE=$XDG_CACHE_HOME/zsh
 ZSH_PLUGINS=$XDG_DATA_HOME/zsh/plugins
-for _d in $ZSH_CACHE/completions $ZSH_PLUGINS $XDG_STATE_HOME/{less,python,node}; do
+for _d in $ZSH_CACHE/completions $ZSH_PLUGINS $XDG_STATE_HOME/{zsh,less,python,node}; do
   [[ -d $_d ]] || mkdir -p $_d
 done
 unset _d
@@ -30,7 +31,7 @@ setopt EXTENDED_GLOB INTERACTIVE_COMMENTS NO_BEEP NO_FLOW_CONTROL
 setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
 setopt COMPLETE_IN_WORD ALWAYS_TO_END
 
-HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
+HISTFILE=$XDG_STATE_HOME/zsh/history
 HISTSIZE=100000
 SAVEHIST=100000
 setopt EXTENDED_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
@@ -90,6 +91,14 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1  # the prompt shows the venv itself
 export BAT_THEME=OneHalfDark
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 
+# LS_COLORS for eza + completion menus (macOS has none); cached, $(<file) doesn't fork
+if (( $+commands[vivid] )); then
+  _lsc=$ZSH_CACHE/ls-colors
+  [[ -s $_lsc && $_lsc -nt $commands[vivid] ]] || vivid generate one-dark >| $_lsc
+  export LS_COLORS=$(<$_lsc)
+  unset _lsc
+fi
+
 # mise: also honour .nvmrc / .node-version / .python-version / .go-version / .java-version / .sdkmanrc
 # (mise ignores these by default). mise sets JAVA_HOME itself — don't export it here.
 export MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS=node,python,go,java
@@ -97,6 +106,11 @@ export MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS=node,python,go,java
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
 [[ -d $ANDROID_HOME ]] && path+=($ANDROID_HOME/emulator $ANDROID_HOME/platform-tools)
+
+# mise: per-project Node / Python / Go / Java versions (mise.toml, .tool-versions, .nvmrc …)
+# Activated before completions so mise-managed tools (uv, pnpm, just, …) are on PATH there.
+# (not cached: its output embeds the current PATH)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
 
 # Debian/Ubuntu ship fd/bat under other names
 _fd=${commands[fd]:+fd};   [[ -z $_fd && -n ${commands[fdfind]} ]] && _fd=fdfind
@@ -147,6 +161,9 @@ _gen_comp uv     uv generate-shell-completion zsh
 _gen_comp uvx    uvx --generate-shell-completion zsh
 _gen_comp mise   mise completion zsh          # needs `usage` (brew install usage)
 _gen_comp docker docker completion zsh
+_gen_comp pnpm   pnpm completion zsh
+_gen_comp just   just --completions zsh
+_gen_comp ruff   ruff generate-shell-completion zsh
 
 fpath=($ZSH_CACHE/completions $ZSH_PLUGINS/zsh-completions/src $BUN_INSTALL(N-/) $fpath)
 
@@ -154,8 +171,9 @@ autoload -Uz compinit
 _zcd=$ZSH_CACHE/zcompdump-$ZSH_VERSION
 [[ -n $_comp_changed ]] && rm -f $_zcd
 # Full security check at most once a day; otherwise load the dump directly.
+# touch: compinit only rewrites the dump when fpath changes, so its mtime would go stale.
 if [[ ! -s $_zcd || -n $_zcd(#qN.mh+20) ]]; then
-  compinit -i -d $_zcd
+  compinit -i -d $_zcd && touch $_zcd
 else
   compinit -C -d $_zcd
 fi
@@ -225,6 +243,7 @@ fi
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=30
 ZSH_AUTOSUGGEST_USE_ASYNC=1
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # don't re-wrap every widget before each prompt
 [[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
   source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 [[ -f $ZSH_PLUGINS/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]] &&
@@ -234,10 +253,6 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 # ─── Tools ───────────────────────────────────────────────────────────────────
 autoload -Uz add-zsh-hook
-
-# mise: per-project Node / Python / Go / Java versions (mise.toml, .tool-versions, .nvmrc …)
-# (not cached: its output embeds the current PATH)
-(( $+commands[mise] )) && eval "$(mise activate zsh)"
 
 _cached_init zoxide zoxide init zsh        # z <dir>, zi = interactive
 _cached_init direnv direnv hook zsh        # only if installed
@@ -389,7 +404,7 @@ venv() {
 # Ports: list listeners (optionally on one port) / kill whatever holds a port
 port()     { lsof -nP -iTCP${1:+:$1} -sTCP:LISTEN }
 killport() {
-  local -a pids=(${(f)"$(lsof -ti tcp:${1:?usage: killport <port>} 2>/dev/null)"})
+  local -a pids=(${(f)"$(lsof -ti tcp:${1:?usage: killport <port>} -sTCP:LISTEN 2>/dev/null)"})
   (( $#pids )) || { print "nothing on :$1"; return 1 }
   kill $pids && print "killed $pids on :$1"
 }
