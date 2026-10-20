@@ -223,6 +223,7 @@ foreach ($a in 'cat', 'gc', 'gcm', 'gl', 'gp', 'ls', 'ni') {
 }
 
 # General
+function .. { Set-Location .. }
 function ... { Set-Location ../.. }
 function .... { Set-Location ../../.. }
 function reload { & (Get-Process -Id $PID).Path -NoLogo; exit }  # restart the shell (like exec zsh)
