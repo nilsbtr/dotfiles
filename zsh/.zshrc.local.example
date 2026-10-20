@@ -1,12 +1,16 @@
-# Machine-specific settings (sourced last by ~/.zshrc)
+# ~/.zshrc.local — machine-specific settings & secrets (sourced last by ~/.zshrc, never committed)
+#
+# Copy to ~/.zshrc.local and uncomment what you need. Runs after everything else,
+# so it can override aliases, env vars and PATH. Note: it runs *after* compinit,
+# so fpath additions here won't reach tab completion.
 
-# JetBrains Toolbox shell scripts (idea, studio, …)
-path+=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts")
+# Secrets / tokens
+# export GITHUB_TOKEN=…
+# export NPM_TOKEN=…
 
-# OrbStack (orb, orbctl, kubectl; docker also lives in /usr/local/bin)
-path+=($HOME/.orbstack/bin)
+# Extra PATH entries for this machine only
+# path+=(/opt/work/bin)
 
-# Keep REPL / pager history out of $HOME
-export LESSHISTFILE=$XDG_STATE_HOME/less/history
-export PYTHON_HISTORY=$XDG_STATE_HOME/python/history       # Python ≥ 3.13
-export NODE_REPL_HISTORY=$XDG_STATE_HOME/node/repl_history
+# Per-machine overrides
+# export EDITOR=vim
+# alias work='cd ~/Work'

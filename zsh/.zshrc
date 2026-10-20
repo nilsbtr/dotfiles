@@ -20,7 +20,10 @@ export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
 
 ZSH_CACHE=$XDG_CACHE_HOME/zsh
 ZSH_PLUGINS=$XDG_DATA_HOME/zsh/plugins
-[[ -d $ZSH_CACHE/completions && -d $ZSH_PLUGINS ]] || mkdir -p $ZSH_CACHE/completions $ZSH_PLUGINS
+for _d in $ZSH_CACHE/completions $ZSH_PLUGINS $XDG_STATE_HOME/{less,python,node}; do
+  [[ -d $_d ]] || mkdir -p $_d
+done
+unset _d
 
 # ─── Options ─────────────────────────────────────────────────────────────────
 setopt EXTENDED_GLOB INTERACTIVE_COMMENTS NO_BEEP NO_FLOW_CONTROL
@@ -62,12 +65,23 @@ path=(
   $path
 )
 
+# App-installed CLIs (skipped if the app isn't installed)
+path+=(
+  "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"(N-/)  # idea, studio, …
+  $HOME/.orbstack/bin(N-/)   # orb, orbctl, kubectl; docker also lives in /usr/local/bin
+)
+
 # ─── Environment ─────────────────────────────────────────────────────────────
 export LANG=${LANG:-en_US.UTF-8}
 if (( $+commands[code] )); then export EDITOR='code --wait'; else export EDITOR=vim; fi
 export VISUAL=$EDITOR
 export PAGER=less LESS='-R -F -i -M'
 export CLICOLOR=1
+
+# Keep REPL / pager history out of $HOME (dirs created above)
+export LESSHISTFILE=$XDG_STATE_HOME/less/history
+export PYTHON_HISTORY=$XDG_STATE_HOME/python/history       # Python ≥ 3.13
+export NODE_REPL_HISTORY=$XDG_STATE_HOME/node/repl_history
 
 export DO_NOT_TRACK=1 NEXT_TELEMETRY_DISABLED=1
 export HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_ENV_HINTS=1
