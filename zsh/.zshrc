@@ -109,9 +109,7 @@ if (( $+commands[vivid] )); then
 fi
 
 # ----- mise (per-project Node / Python / Go / Java versions) -----
-# mise sets JAVA_HOME itself, don't export it here.
-# Before completions so mise-managed tools (uv, pnpm, ...) are found there.
-# Not cached: its output embeds the current PATH.
+# Put the current project's tool versions on PATH, updated on every prompt
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 
 # ----- Helpers -----
