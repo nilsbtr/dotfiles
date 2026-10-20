@@ -112,10 +112,10 @@
             "name": "Vesper",
             "tab":
             {
-                "background": "#161616FF",
+                "background": "#232323FF",
                 "iconStyle": "default",
                 "showCloseButton": "always",
-                "unfocusedBackground": "#161616FF"
+                "unfocusedBackground": "#1C1C1CFF"
             },
             "tabRow": 
             {
