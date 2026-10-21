@@ -232,9 +232,20 @@ bindkey '^ ' autosuggest-accept                # Ctrl-Space accepts suggestion
 # fzf: Ctrl-T files, Alt-C dirs, Ctrl-R history
 if (( $+commands[fzf] )); then
   if [[ -n $_fd ]]; then
-    export FZF_DEFAULT_COMMAND="$_fd --type f --hidden --follow --exclude .git"
+    # Skip VCS and dependency/cache dirs everywhere, even outside git repos where .gitignore doesn't apply
+    _fd_ex=(
+      .git
+      node_modules .next        # node/js (vite/astro caches live inside node_modules)
+      .venv venv __pycache__    # python
+      '**/pkg/mod'              # go module cache
+      .gradle .m2 target build  # java/gradle/maven, flutter build output
+      .dart_tool                # flutter
+    )
+    _fd_flags=${(j: :)${(@)${(@qq)_fd_ex}/#/--exclude }}
+    export FZF_DEFAULT_COMMAND="$_fd --type f --hidden --follow $_fd_flags"
     export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
-    export FZF_ALT_C_COMMAND="$_fd --type d --hidden --follow --exclude .git"
+    export FZF_ALT_C_COMMAND="$_fd --type d --hidden --follow $_fd_flags"
+    unset _fd_ex _fd_flags
   fi
   # Colors: terminal palette (Vesper) by index, plus a subtle selection background
   _fzf_colors='--color=16,bg+:#232323,fg+:15,hl:11,hl+:11,prompt:4,pointer:11,marker:10,spinner:11,info:8,header:8,border:8,gutter:-1'

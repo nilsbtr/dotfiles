@@ -178,9 +178,20 @@ Set-PSReadLineKeyHandler -Key Ctrl+Backspace  -Function BackwardKillWord
 Set-PSReadLineKeyHandler -Key Ctrl+z          -Function Undo
 
 # ----- fzf: Ctrl-T files, Alt-C dirs, Ctrl-R history, Tab completion menu (like fzf-tab) -----
-$env:FZF_DEFAULT_COMMAND = 'fd --type f --hidden --follow --exclude .git'
+# Skip VCS and dependency/cache dirs everywhere, even outside git repos where .gitignore doesn't apply
+$fdExcludes = @(
+    '.git'
+    'node_modules', '.next'              # node/js (vite/astro caches live inside node_modules)
+    '.venv', 'venv', '__pycache__'       # python
+    '**/pkg/mod'                         # go module cache
+    '.gradle', '.m2', 'target', 'build'  # java/gradle/maven, flutter build output
+    '.dart_tool'                         # flutter
+) | ForEach-Object { "--exclude `"$_`"" }
+$fdExcludes = $fdExcludes -join ' '
+$env:FZF_DEFAULT_COMMAND = "fd --type f --hidden --follow $fdExcludes"
 $env:FZF_CTRL_T_COMMAND = $env:FZF_DEFAULT_COMMAND
-$env:FZF_ALT_C_COMMAND = 'fd --type d --hidden --follow --exclude .git'
+$env:FZF_ALT_C_COMMAND = "fd --type d --hidden --follow $fdExcludes"
+Remove-Variable fdExcludes
 # Colors: terminal palette (Vesper) by index, plus a subtle selection background
 $env:FZF_DEFAULT_OPTS = '--height=40% --layout=reverse --border=rounded --info=inline --cycle ' +
     '--color=16,bg+:#232323,fg+:15,hl:11,hl+:11,prompt:4,pointer:11,marker:10,spinner:11,info:8,header:8,border:8,gutter:-1'
