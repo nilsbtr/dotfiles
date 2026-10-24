@@ -8,7 +8,7 @@
 #
 # Overview of the aliases and functions below: phelp [filter]
 # Machine-specific settings / secrets: profile.local.ps1 next to this file (sourced last, never committed)
-# PATH for every app (not just this shell): user PATH has scoop shims, ~/.local/bin, ~/.pnpm, ~/.bun/bin, ~/go/bin
+# PATH for every app (not just this shell): user PATH has scoop shims, ~/.local/bin, scoop pnpm's and bun's bin, ~/go/bin
 # Measure startup: pwsh-bench
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -106,8 +106,6 @@ $env:CLICOLOR = '1'
 
 # Global installs of package managers (their bin dirs are on the user PATH)
 $env:GOPATH = $env:GOPATH ?? "$HOME\go"
-$env:BUN_INSTALL = "$HOME\.bun"
-$env:PNPM_HOME = "$HOME\.pnpm"
 
 # Keep REPL / pager history out of $HOME (dirs created above)
 $env:LESSHISTFILE = "$StateDir\less\history"

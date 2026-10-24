@@ -62,7 +62,7 @@ export PNPM_HOME=$HOME/.pnpm
 
 path=(
   $HOME/.local/bin        # uv tool install, standalone installers
-  $PNPM_HOME              # pnpm add -g
+  $PNPM_HOME/bin          # pnpm add -g
   $BUN_INSTALL/bin        # bun add -g
   $GOPATH/bin             # go install
   $HOME/.cargo/bin(N-/)   # cargo install
