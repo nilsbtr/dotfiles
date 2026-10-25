@@ -4,7 +4,6 @@
 	signingkey = 
 
 [gpg]
-	format = openpgp
 	program = 
 
 [init]
@@ -12,24 +11,21 @@
 
 [core]
 	editor = code --wait
-	autocrlf = false
-	safecrlf = warn
-	longpaths = true
-	ignorecase = true
+	pager = delta
 	quotepath = false
 	fsmonitor = true
 	untrackedCache = true
-	pager = delta
 
-[branch]
-	sort = -committerdate
-
-[tag]
-	gpgsign = true
-	sort = version:refname
+[help]
+	autocorrect = prompt
 
 [status]
 	short = true
+	branch = true
+
+[commit]
+	gpgsign = true
+	verbose = true
 
 [diff]
 	algorithm = histogram
@@ -47,16 +43,15 @@
 	plus-style = syntax "#19251e"
 	plus-emph-style = syntax "#2a4133"
 
-[merge]
-	conflictStyle = zdiff3
+[column]
+	ui = auto
 
-[rerere]
-	enabled = true
-	autoupdate = true
+[branch]
+	sort = -committerdate
 
-[commit]
+[tag]
 	gpgsign = true
-	verbose = true
+	sort = version:refname
 
 [pull]
 	rebase = true
@@ -64,6 +59,14 @@
 [rebase]
 	autoStash = true
 	updateRefs = true
+	autoSquash = true
+
+[merge]
+	conflictStyle = zdiff3
+
+[rerere]
+	enabled = true
+	autoupdate = true
 
 [fetch]
 	prune = true
@@ -71,16 +74,11 @@
 	writeCommitGraph = true
 
 [push]
-	default = simple
 	autoSetupRemote = true
 	followTags = true
 
+[transfer]
+	fsckObjects = true
+
 [credential]
 	helper = osxkeychain
-
-[http]
-	sslBackend = secure-transport
-
-[maintenance]
-	auto = true
-	strategy = incremental
