@@ -6,14 +6,6 @@
 [gpg]
 	program = 
 
-[commit]
-	gpgsign = true
-	verbose = true
-
-[tag]
-	gpgsign = true
-	sort = version:refname
-
 [init]
 	defaultBranch = main
 
@@ -24,22 +16,16 @@
 	fsmonitor = true
 	untrackedCache = true
 
-[credential]
-	helper =
-	helper = osxkeychain
-
 [help]
 	autocorrect = prompt
-
-[column]
-	ui = auto
 
 [status]
 	short = true
 	branch = true
 
-[branch]
-	sort = -committerdate
+[commit]
+	gpgsign = true
+	verbose = true
 
 [diff]
 	algorithm = histogram
@@ -64,6 +50,24 @@
 	hyperlinks = true
 	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	gpgsign = true
+	sort = version:refname
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+	autoSquash = true
+
 [merge]
 	conflictStyle = zdiff3
 	tool = vscode
@@ -83,17 +87,13 @@
 	pruneTags = true
 	writeCommitGraph = true
 
-[pull]
-	rebase = true
-
-[rebase]
-	autoStash = true
-	updateRefs = true
-	autoSquash = true
-
 [push]
 	autoSetupRemote = true
 	followTags = true
 
 [transfer]
 	fsckObjects = true
+
+[credential]
+	helper =
+	helper = osxkeychain
