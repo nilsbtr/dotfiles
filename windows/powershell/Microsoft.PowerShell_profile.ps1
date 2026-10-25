@@ -52,10 +52,14 @@ function Get-CachedInit {
 }
 
 # ----- PSReadLine (history, suggestions, highlighting) -----
-# Interactive = not `pwsh -Command/-File ...` (unless -NoExit). CompletionPredictor keeps
-# a non-interactive pwsh from ever exiting, which hangs scripts and editor tasks.
-$argv = [Environment]::GetCommandLineArgs()
-$Interactive = ($argv -match '^-noe(xit)?$') -or -not ($argv -match '^-(c(ommand)?|f(ile)?|e(c|ncodedcommand)?)$')
+# Interactive = not `pwsh -Command/-File/-EncodedCommand ...` or `pwsh script.ps1` (unless -NoExit).
+# pwsh takes any unambiguous prefix (-comm, -enc, -noex), so flags are matched by prefix.
+# CompletionPredictor keeps a non-interactive pwsh from ever exiting, which hangs scripts and editor tasks.
+$argv = [Environment]::GetCommandLineArgs() | Select-Object -Skip 1
+$flags = foreach ($p in $argv) { if ($p -match '^(--?|/)([a-z]+)$') { $Matches[2].ToLower() } }
+$noExit = $flags | Where-Object { $_.Length -ge 3 -and 'noexit'.StartsWith($_) }
+$runs = ($argv -match '\.ps1$') -or ($flags | Where-Object { $_ -eq 'ec' -or 'command'.StartsWith($_) -or 'file'.StartsWith($_) -or 'encodedcommand'.StartsWith($_) })
+$Interactive = [bool]$noExit -or -not $runs
 if ($Interactive) { Import-Module CompletionPredictor -ErrorAction SilentlyContinue }
 
 Set-PSReadLineOption -EditMode Windows `
@@ -446,7 +450,7 @@ function phelp {
 # ----- Local overrides & cleanup -----
 $localProfile = Join-Path (Split-Path $PROFILE) 'profile.local.ps1'
 if (Test-Path $localProfile) { . $localProfile }
-Remove-Variable localProfile, StateDir, argv, a, d -ErrorAction SilentlyContinue
+Remove-Variable localProfile, StateDir, argv, flags, noExit, runs, p, a, d -ErrorAction SilentlyContinue
 
 # zoxide (z <dir>, zi) wraps the prompt, so it loads after starship
 if ($init = Get-CachedInit zoxide zoxide { zoxide init powershell }) { . $init }

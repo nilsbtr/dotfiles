@@ -446,7 +446,8 @@ venv() {
 # Network: list listeners (optionally on one port) / kill the listener on a port / serve cwd
 port()     { lsof -nP -iTCP${1:+:$1} -sTCP:LISTEN }  # list listening ports (port [n])
 killport() {  # kill whatever listens on a port
-  local -a pids=(${(f)"$(lsof -ti tcp:${1:?usage: killport <port>} -sTCP:LISTEN 2>/dev/null)"})
+  (( $# )) || { print 'usage: killport <port>'; return 1 }
+  local -a pids=(${(f)"$(lsof -ti tcp:$1 -sTCP:LISTEN 2>/dev/null)"})
   (( $#pids )) || { print "nothing on :$1"; return 1 }
   kill $pids && print "killed $pids on :$1"
 }
