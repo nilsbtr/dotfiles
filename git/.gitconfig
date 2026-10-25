@@ -6,6 +6,14 @@
 [gpg]
 	program = 
 
+[commit]
+	gpgsign = true
+	verbose = true
+
+[tag]
+	gpgsign = true
+	sort = version:refname
+
 [init]
 	defaultBranch = main
 
@@ -16,20 +24,31 @@
 	fsmonitor = true
 	untrackedCache = true
 
+[credential]
+	helper =
+	helper = osxkeychain
+
 [help]
 	autocorrect = prompt
+
+[column]
+	ui = auto
 
 [status]
 	short = true
 	branch = true
 
-[commit]
-	gpgsign = true
-	verbose = true
+[branch]
+	sort = -committerdate
 
 [diff]
 	algorithm = histogram
 	colorMoved = default
+	colorMovedWS = allow-indentation-change
+	tool = vscode
+
+[difftool "vscode"]
+	cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
 
 [interactive]
 	diffFilter = delta --color-only
@@ -42,27 +61,18 @@
 	minus-emph-style = syntax "#4d2e29"
 	plus-style = syntax "#19251e"
 	plus-emph-style = syntax "#2a4133"
-
-[column]
-	ui = auto
-
-[branch]
-	sort = -committerdate
-
-[tag]
-	gpgsign = true
-	sort = version:refname
-
-[pull]
-	rebase = true
-
-[rebase]
-	autoStash = true
-	updateRefs = true
-	autoSquash = true
+	hyperlinks = true
+	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 
 [merge]
 	conflictStyle = zdiff3
+	tool = vscode
+
+[mergetool]
+	keepBackup = false
+
+[mergetool "vscode"]
+	cmd = code --wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"
 
 [rerere]
 	enabled = true
@@ -73,12 +83,17 @@
 	pruneTags = true
 	writeCommitGraph = true
 
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	updateRefs = true
+	autoSquash = true
+
 [push]
 	autoSetupRemote = true
 	followTags = true
 
 [transfer]
 	fsckObjects = true
-
-[credential]
-	helper = osxkeychain
